@@ -19,6 +19,8 @@
   "homepage": "https://github.com/Enszyk/kurnik-pwr#readme",
   "dependencies": {
     "express": "^4.17.1",
+    "mongodb": "^3.6.4",
+    "mongoose": "^5.11.15",
     "ws": "^7.4.4"
   }
 }
