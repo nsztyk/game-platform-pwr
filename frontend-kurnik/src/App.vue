@@ -1,6 +1,7 @@
 <template>
-  <div id="nav">
-    <router-link to="/">Home</router-link> |
-  </div>
-  <router-view/>
+  <router-view />
 </template>
+
+<style>
+@import "https://use.fontawesome.com/releases/v5.15.2/css/all.css";
+</style>
