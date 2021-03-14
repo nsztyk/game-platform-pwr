@@ -1,47 +1,36 @@
 <template>
   <h3 class="text-center text-3xl -mt-6 mb-6">Register to play!</h3>
-  <label for="usernameInput" class="mb-1">Username</label>
-  <input
-    class="bg-transparent border-b-2 outline-none pb-1 font-normal mb-5"
-    type="text"
-    name="usernameInput"
+  <form-input
     id="usernameInput"
-    placeholder="Enter username"
+    labelText="Username"
+    placeholderText="Enter username"
+    type="text"
   />
-  <label for="passwordInput" class="mb-1">Password</label>
-  <input
-    class="bg-transparent border-b-2 outline-none pb-1 font-normal mb-6"
-    type="password"
-    name="passwordInput"
+  <form-input
     id="passwordInput"
-    placeholder="Enter password"
-  />
-  <label for="passwordInputReapeat" class="mb-1">Reapeat password</label>
-  <input
-    class="bg-transparent border-b-2 outline-none pb-1 font-normal mb-6"
+    labelText="Password"
+    placeholderText="Enter password"
     type="password"
-    name="passwordInputReapeat"
-    id="passwordInputReapeat"
-    placeholder="password"
   />
-  <button
-    type="submit"
-    class="bg-red-700 rounded-3xl py-1 font-medium mb-4"
-    @click.prevent=""
-  >
-    Register
-  </button>
-  <router-link class="text-base text-gray-300 font-normal justify-start" :to="{name: 'Login'}">
-    Have and account? Log in
-  </router-link>
+  <form-input
+    id="passwordInput2"
+    labelText="Repeat password"
+    placeholderText="Enter password"
+    type="password"
+  />
+  <form-button buttonText="Register" />
+  <form-link :target="{ name: 'Login' }" navText="Login to exsting account" />
 </template>
 
-<script>
-export default {
+<script lang="ts">
+import FormInput from "@/components/FormInput.vue";
+import FormButton from "@/components/FormButton.vue";
+import FormLink from "@/components/FormLink.vue";
 
-}
+import { defineComponent } from "vue";
+
+export default defineComponent({
+  name: "Register",
+  components: { FormInput, FormButton, FormLink },
+});
 </script>
-
-<style>
-
-</style>
