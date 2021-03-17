@@ -1,4 +1,4 @@
-# kurnik-pwr
+# game-platform-pwr
 
 Web application in which 2 players can compete in various board games against each other
 
