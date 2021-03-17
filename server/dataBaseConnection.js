@@ -10,10 +10,11 @@ mongoose.connect(env.mongoURI, { useNewUrlParser: true, useUnifiedTopology: true
   .then((res) => appListen())
   .catch((err) => console.log(err))
 
-app.get('/add-user', (req, res) => {
+
+app.get('/api/add-user', (req, res) => {
 
   const user = new User({
-    username: "TEST",
+    username: "username",
     password: 'StrongPassword1'
   })
 
@@ -27,11 +28,7 @@ app.get('/add-user', (req, res) => {
     });
 })
 
-app.get('/', (req, res) => {
-  res.send("Siema")
-})
-
 const appListen = () => {
-  app.listen(3000)
-  console.log('Listening on port 3000, connected to DB');
+  app.listen(8000)
+  console.log('Listening on port 8000, connected to DB');
 }
