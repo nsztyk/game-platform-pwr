@@ -6,6 +6,8 @@
     :name="id"
     :id="id"
     :placeholder="placeholderText"
+    :value="modelValue"
+    @input="$emit('update:modelValue', $event.target.value)"
   />
 </template>
 
@@ -20,6 +22,9 @@ enum inputType {
 export default defineComponent({
   name: "FormInput",
   props: {
+    modelValue: {
+      type: String,
+    },
     type: {
       type: String as PropType<inputType>,
       required: true,
