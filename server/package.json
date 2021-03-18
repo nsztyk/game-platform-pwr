@@ -1,22 +1,22 @@
 {
-  "name": "kurnik-pwr",
+  "name": "game-platform-pwr",
   "type": "commonjs",
   "version": "1.0.0",
   "description": "Web application in which 2 players can compete in various board games against each other",
   "main": "index.js",
   "scripts": {
-    "test": "echo \"Error: no test specified\" && exit 1"
+    "serve": "nodemon serverTutorial.js"
   },
   "repository": {
     "type": "git",
-    "url": "git+https://github.com/Enszyk/kurnik-pwr.git"
+    "url": "git+https://github.com/Enszyk/game-platform-pwr.git"
   },
   "author": "",
   "license": "ISC",
   "bugs": {
-    "url": "https://github.com/Enszyk/kurnik-pwr/issues"
+    "url": "https://github.com/Enszyk/game-platform-pwr/issues"
   },
-  "homepage": "https://github.com/Enszyk/kurnik-pwr#readme",
+  "homepage": "https://github.com/Enszyk/game-platform-pwr#readme",
   "dependencies": {
     "cors": "^2.8.5",
     "express": "^4.17.1",
