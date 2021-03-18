@@ -1,5 +1,4 @@
 const express = require('express');
-const mongoose = require('express');
 
 const router = express.Router();
 
@@ -9,6 +8,9 @@ router.get('/', (req, res) => {
 })
 
 // Add posts
+router.post('', (req,res) => {
+  res.send("Get Posts")
+})
 
 // Delete Post
 
