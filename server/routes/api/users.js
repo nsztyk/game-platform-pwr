@@ -1,14 +1,18 @@
 const express = require('express');
 const User = require('../../models/user');
 const router = express.Router();
+const bcrypt = require('bcryptjs');
 
 // Register user
-router.post('/register', (req, res) => {
+router.post('/register', async (req, res)  => {
 
-  const payloadUser = req.body.user
+  const {username, password: plainTextPassword} = req.body.user
+
+  const password = await bcrypt.hash(plainTextPassword, 10); 
+
   const user = new User({
-    username: payloadUser.username,
-    password: payloadUser.password
+    username,
+    password
   })
 
   user.save()
