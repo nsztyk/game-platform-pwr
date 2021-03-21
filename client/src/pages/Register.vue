@@ -5,12 +5,14 @@
     labelText="Username"
     placeholderText="Enter username"
     type="text"
+    v-model="username"
   />
   <form-input
     id="passwordInput"
     labelText="Password"
     placeholderText="Enter password"
     type="password"
+    v-model="password"
   />
   <form-input
     id="passwordInput2"
@@ -18,7 +20,7 @@
     placeholderText="Enter password"
     type="password"
   />
-  <form-button buttonText="Register" />
+  <form-button buttonText="Register" @click="handleRegister"/>
   <form-link :target="{ name: 'Login' }" navText="Login to exsting account" />
 </template>
 
@@ -27,10 +29,32 @@ import FormInput from "@/components/FormInput.vue";
 import FormButton from "@/components/FormButton.vue";
 import FormLink from "@/components/FormLink.vue";
 
-import { defineComponent } from "vue";
+import { defineComponent, ref } from "vue";
+import { registerUser } from "@/PostService";
 
 export default defineComponent({
   name: "Register",
   components: { FormInput, FormButton, FormLink },
+  setup() {
+    const password = ref("");
+    const username = ref("");
+
+    const handleRegister = async () => {
+      console.log("loggin");
+      const user = {
+        username: username.value,
+        password: password.value,
+      };
+
+      console.log(user);
+      const siema = await registerUser(user);
+      console.log(siema);
+    };
+    return {
+      password,
+      username,
+      handleRegister,
+    };
+  },
 });
 </script>

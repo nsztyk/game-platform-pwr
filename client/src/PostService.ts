@@ -1,26 +1,22 @@
 import axios from 'axios';
 
-const url = 'api/posts';
+const url = 'api/users';
 
 interface User {
   username: string;
   password: string;
 }
 
-export const getPosts = async () => {
-  const res = await axios.get(url);
-  const data = res.data;
-  return data;
-}
-
-export const insertPost = (text: string) => {
-  return axios.post(url, {
-    text
-  });
-}
-
 export const loginUser = (user: User) => {
-  return axios.post(url, {
+  console.log("login");
+  return axios.post(url + "/login", {
+    user
+  })
+}
+
+export const registerUser = (user: User) => {
+  console.log("register");
+  return axios.post(url + '/register', {
     user
   })
 }

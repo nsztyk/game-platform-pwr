@@ -17,18 +17,9 @@
 
 <script lang="ts">
 import { defineComponent } from "vue";
-import { getPosts } from "../PostService";
 
 export default defineComponent({
   name: "Home",
-  async created() {
-    try {
-      const posts = await getPosts();
-      console.log(posts);
-    } catch (err) {
-      console.log(err);
-    }
-  },
 });
 </script>
 
