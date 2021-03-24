@@ -15,13 +15,14 @@ Web application in which 2 players can compete in various board games against ea
 
 ## General info
 
-The project must contain a solution for 5 problems:
+The project must meet the given conditions:
 
-- Has a UI
-- Communicates with database
-- Processes information in real-time
-- ?
-- ?
+- Have a data base
+- Exhibit API in UI
+- Consume API
+- Have a UI
+- React in real-time on users inputs
+
 
 ## Technologies
 
@@ -31,12 +32,11 @@ The project must contain a solution for 5 problems:
 - Express.js
 - WebSocket
 - MongoDB
+- JWT
 
 ## Features
 
-To-do list:
-
-- Create a server with WebSocket technology
+Visit Project Tab
 
 ## Status
 
