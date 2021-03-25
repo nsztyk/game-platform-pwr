@@ -3,7 +3,7 @@ const User = require('../../models/user');
 const router = express.Router();
 const bcrypt = require('bcryptjs');
 const jwt = require('jsonwebtoken');
-const env = require('./config/keys');
+const env = require('../../config/keys');
 
 // Register user
 router.post('/register', async (req, res) => {
@@ -37,12 +37,12 @@ router.post('/register', async (req, res) => {
 
 // Login user
 router.post('/login', async (req, res) => {
-  const user = req.body.user
+  const userData = req.body.user
 
-  if (user == undefined || (!user.hasOwnProperty('username') || !user.hasOwnProperty('password')))
+  if (userData == undefined || (!userData.hasOwnProperty('username') || !userData.hasOwnProperty('password')))
     return res.json({ status: 'error', error: 'Invalid user parameters' })
 
-  const { username, password } = user;
+  const { username, password } = userData;
 
   const user = await User.findOne({ username }).lean()
 
