@@ -34,8 +34,26 @@ router.post('/register', async (req, res) => {
 })
 
 // Login user
-router.post('/login', (req, res) => {
-  res.send(req.body)
+router.post('/login', async (req, res) => {
+  const user = req.body.user
+
+  if (user == undefined || (!user.hasOwnProperty('username') || !user.hasOwnProperty('password')))
+    return res.json({ status: 'error', error: 'Invalid user parameters' })
+
+  const { username, password } = user;
+
+  const user = await User.findOne({ username }).lean()
+
+  if (!user) {
+    return res.json({ statu: 'error', error: 'Invalid username/password' })
+  }
+
+  if (await bcrypt.compare(password, user.password)) {
+  
+    return res.json({ statu: 'ok', data: '' })
+  
+  }
+  return res.json({ statu: 'error', error: 'Invalid username/password' })
 })
 
 
