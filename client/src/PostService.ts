@@ -20,3 +20,10 @@ export const registerUser = (user: User) => {
     user
   })
 }
+
+export const secret = (token: string) => {
+  console.log("secret")
+  return axios.post(url + '/secret', {
+    token
+  })
+}

@@ -47,20 +47,30 @@ router.post('/login', async (req, res) => {
   const user = await User.findOne({ username }).lean()
 
   if (!user) {
-    return res.json({ statu: 'error', error: 'Invalid username/password' })
+    return res.json({ status: 'error', error: 'Invalid username/password' })
   }
 
   if (await bcrypt.compare(password, user.password)) {
-    
+
     const token = jwt.sign({
-      id: user._id, 
+      id: user._id,
       username: user.username
     }, env.JWT_SECRET)
 
-    return res.json({ statu: 'ok', data: token })
-  
+    return res.json({ status: 'ok', data: token })
+
   }
-  return res.json({ statu: 'error', error: 'Invalid username/password' })
+  return res.json({ status: 'error', error: 'Invalid username/password' })
+})
+
+router.post('/secret', async (req, res) => {
+  const { token } = req.body
+  try {
+    const user = jwt.verify(token, env.JWT_SECRET)
+    res.json({ status: "ok" })
+  } catch (error) {
+    res.json({ status: 'error', error: ';))' })
+  }
 })
 
 

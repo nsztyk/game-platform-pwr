@@ -1,5 +1,7 @@
 <template>
   <h3 class="text-center text-3xl -mt-6 mb-6">Login to play!</h3>
+
+  <button @click.prevent="handleSecret">Secret</button>
   <form-input
     id="usernameInput"
     labelText="Username"
@@ -25,7 +27,7 @@ import FormLink from "@/components/FormLink.vue";
 
 import { defineComponent, ref } from "vue";
 
-import { loginUser } from "../PostService";
+import { loginUser, secret } from "../PostService";
 
 export default defineComponent({
   name: "Login",
@@ -35,20 +37,37 @@ export default defineComponent({
     const username = ref("");
 
     const handleLogin = async () => {
-      console.log("loggin");
       const user = {
         username: username.value,
         password: password.value,
       };
 
-      console.log(user);
-      const siema = await loginUser(user);
-      console.log(siema);
+      const result = await loginUser(user);
+      if (result.data.status === "ok")
+        localStorage.setItem('token', result.data.data)
+      else
+        localStorage.removeItem('token')
+      console.log(localStorage);
     };
+
+    const handleSecret = async () => {
+      const token = localStorage.getItem('token');
+
+      let result;
+
+      if (token)
+        result = await secret(token);
+      else 
+        result = {status: 'error', error: 'No token was given'}
+
+
+      console.log(result);
+    }
     return {
       password,
       username,
       handleLogin,
+      handleSecret
     };
   },
 });
