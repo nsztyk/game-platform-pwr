@@ -2,6 +2,8 @@ const express = require('express');
 const User = require('../../models/user');
 const router = express.Router();
 const bcrypt = require('bcryptjs');
+const jwt = require('jsonwebtoken');
+const env = require('./config/keys');
 
 // Register user
 router.post('/register', async (req, res) => {
@@ -49,8 +51,13 @@ router.post('/login', async (req, res) => {
   }
 
   if (await bcrypt.compare(password, user.password)) {
-  
-    return res.json({ statu: 'ok', data: '' })
+    
+    const token = jwt.sign({
+      id: user._id, 
+      username: user.username
+    }, env.JWT_SECRET)
+
+    return res.json({ statu: 'ok', data: token })
   
   }
   return res.json({ statu: 'error', error: 'Invalid username/password' })
