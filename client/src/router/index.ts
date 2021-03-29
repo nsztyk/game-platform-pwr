@@ -20,9 +20,10 @@ const routes: Array<RouteRecordRaw> = [
     ]
   },
   {
-    path: "/",
-    redirect: { name: 'Account' }
-  }
+    path: '/games',
+    name: "Game",
+    component: () => import(/* webpackChunkName: "chooseGame" */ '../pages/ChooseGame.vue'),
+  },
 ]
 
 const router = createRouter({

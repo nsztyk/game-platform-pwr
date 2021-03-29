@@ -28,6 +28,7 @@ import FormLink from "@/components/FormLink.vue";
 import { defineComponent, ref } from "vue";
 
 import { loginUser, secret } from "../PostService";
+import router from "@/router";
 
 export default defineComponent({
   name: "Login",
@@ -43,8 +44,10 @@ export default defineComponent({
       };
 
       const result = await loginUser(user);
-      if (result.data.status === "ok")
+      if (result.data.status === "ok"){
         localStorage.setItem('token', result.data.data)
+        router.push({name: 'Game'})
+      }
       else
         localStorage.removeItem('token')
       console.log(localStorage);
