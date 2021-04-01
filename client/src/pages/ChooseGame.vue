@@ -28,6 +28,11 @@ export default defineComponent({
     if (! await isTokenAuthorized()){
       router.push({name: 'Account'})
     }
+    const socket = new WebSocket('ws://localhost:3000');
+
+    socket.addEventListener('open', function (event) {
+        console.log('Connected to WS Server')
+    });
   }
 })
 </script>
