@@ -30,7 +30,7 @@ import FormButton from "@/components/FormButton.vue";
 import FormLink from "@/components/FormLink.vue";
 
 import { defineComponent, ref } from "vue";
-import { registerUser } from "@/PostService";
+import { registerUser } from "@/middleware/AuthenticationService";
 
 export default defineComponent({
   name: "Register",
@@ -45,10 +45,9 @@ export default defineComponent({
         username: username.value,
         password: password.value,
       };
-
-      console.log(user);
-      const siema = await registerUser(user);
-      console.log(siema);
+      
+      // eslint-disable-next-line
+      const res = await registerUser(user);
     };
     return {
       password,

@@ -1,7 +1,6 @@
 <template>
   <h3 class="text-center text-3xl -mt-6 mb-6">Login to play!</h3>
 
-  <button @click.prevent="handleSecret">Secret</button>
   <form-input
     id="usernameInput"
     labelText="Username"
@@ -27,7 +26,8 @@ import FormLink from "@/components/FormLink.vue";
 
 import { defineComponent, ref } from "vue";
 
-import { loginUser, secret } from "../PostService";
+import { loginUser } from "../middleware/AuthenticationService";
+import { setToken } from "../middleware/TokenService";
 import router from "@/router";
 
 export default defineComponent({
@@ -44,33 +44,15 @@ export default defineComponent({
       };
 
       const result = await loginUser(user);
-      if (result.data.status === "ok"){
-        localStorage.setItem('token', result.data.data)
-        router.push({name: 'Game'})
+      if (result.data.status === "ok") {
+        setToken(result.data.data);
+        router.push({ name: "Game" });
       }
-      else
-        localStorage.removeItem('token')
-      console.log(localStorage);
     };
-
-    const handleSecret = async () => {
-      const token = localStorage.getItem('token');
-
-      let result;
-
-      if (token)
-        result = await secret(token);
-      else 
-        result = {status: 'error', error: 'No token was given'}
-
-
-      console.log(result);
-    }
     return {
       password,
       username,
       handleLogin,
-      handleSecret
     };
   },
 });

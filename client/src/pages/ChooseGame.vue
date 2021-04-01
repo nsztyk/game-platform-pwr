@@ -8,13 +8,26 @@
 </template>
 
 <script lang="ts">
+
+import router from '@/router'
 import { defineComponent } from 'vue'
+import { removeToken, isTokenAuthorized } from '../middleware/TokenService'
 
 export default defineComponent({
   name: "ChooseGame",
+  setup(){
+    const logOut = () => {
+      removeToken()
+      router.push({name: 'Account'})
+    }
+    return {
+      logOut
+    }
+  },
+  async beforeCreate(){
+    if (! await isTokenAuthorized()){
+      router.push({name: 'Account'})
+    }
+  }
 })
 </script>
-
-<style scoped>
-
-</style>
