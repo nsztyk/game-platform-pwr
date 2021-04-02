@@ -8,31 +8,29 @@
 </template>
 
 <script lang="ts">
-
-import router from '@/router'
-import { defineComponent } from 'vue'
-import { removeToken, isTokenAuthorized } from '../middleware/TokenService'
+import router from "@/router";
+import { defineComponent } from "vue";
+import { removeToken } from "../middleware/TokenService";
+import io from "socket.io-client";
 
 export default defineComponent({
   name: "ChooseGame",
-  setup(){
-    const logOut = () => {
-      removeToken()
-      router.push({name: 'Account'})
-    }
+  data() {
     return {
-      logOut
-    }
+      socket: io("http://localhost:3000"),
+      users: [],
+    };
   },
-  async beforeCreate(){
-    if (! await isTokenAuthorized()){
-      router.push({name: 'Account'})
-    }
-    const socket = new WebSocket('ws://localhost:3000');
-
-    socket.addEventListener('open', function (event) {
-        console.log('Connected to WS Server')
+  methods: {
+    logOut() {
+      removeToken();
+      router.push({ name: "Account" });
+    },
+  },
+  created() {
+    this.socket.on("chat-message", (data) => {
+      console.log(data);
     });
-  }
-})
+  },
+});
 </script>
