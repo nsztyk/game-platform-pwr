@@ -22,8 +22,13 @@ const routes: Array<RouteRecordRaw> = [
   {
     path: '/games',
     name: "Game",
-    component: () => import(/* webpackChunkName: "chooseGame" */ '../pages/ChooseGame.vue'),
+    component: () => import(/* webpackChunkName: "gameCenter" */ '../pages/GameCenter.vue'),
   },
+  {
+    path: '/games/:id',
+    name: 'Room',
+    component: () => import(/* webpackChunkName: "chooseGame" */ '../pages/ChooseGame.vue'),
+  }
 ]
 
 const router = createRouter({

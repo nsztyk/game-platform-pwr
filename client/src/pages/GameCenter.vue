@@ -4,15 +4,15 @@
     <button @click="logOut">
       log out
     </button>
-    <input type="text" placeholder="message" v-model="messageText" />
-    <button @click="sendMessage">Send</button>
-    <div>
-      <ul>
-        <li v-for="(message, index) in messages" :key="index">
-          {{ message }}
-        </li>
-      </ul>
-    </div>
+    <button @click="createNewRoom">Create new room</button>
+    <h2>Craeted rooms</h2>
+    <ul>
+      <li v-for="(room, index) in rooms" :key="index">
+        <router-link :to="{ name: 'Room', params: { id: room.id } }">
+          {{ room.name }}
+        </router-link>
+      </li>
+    </ul>
   </div>
 </template>
 
@@ -30,7 +30,7 @@ export default defineComponent({
       socket: io("http://localhost:3000"),
       users: [],
       messages: [] as string[],
-      destinationId: this.$route.params.id,
+      rooms: [] as object[],
     };
   },
   methods: {
@@ -43,6 +43,9 @@ export default defineComponent({
       this.messages.push(`You: ${this.messageText}`);
       this.messageText = "";
     },
+    createNewRoom() {
+      console.log("XD");
+    }
   },
   created() {
     this.socket.emit(
@@ -64,8 +67,9 @@ export default defineComponent({
       this.messages.push(`${nickname} disconneted!`);
     });
 
-    this.socket.on("rooms", (data) => {
-      console.log(data);
+    this.socket.on("rooms", (rooms) => {
+      console.log(rooms);
+      this.rooms = rooms;
     });
   },
 });
