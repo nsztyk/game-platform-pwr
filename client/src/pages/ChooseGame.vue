@@ -39,18 +39,18 @@ export default defineComponent({
       router.push({ name: "Account" });
     },
     sendMessage() {
-      this.socket.emit("send-chat-message", this.messageText);
+      this.socket.emit("send-chat-message", {message: this.messageText, id: this.destinationId});
       this.messages.push(`You: ${this.messageText}`);
       this.messageText = "";
     },
   },
   created() {
-    this.socket.emit(
-      "new-user",
-      Math.random()
+    this.socket.emit("new-user", {
+      nickname: Math.random()
         .toString(36)
-        .slice(2)
-    );
+        .slice(2),
+      id: this.destinationId
+    });
 
     this.socket.on("chat-message", ({ message, nickname }) => {
       this.messages.push(`${nickname}: ${message}`);
@@ -62,10 +62,6 @@ export default defineComponent({
 
     this.socket.on("user-disconnected", (nickname) => {
       this.messages.push(`${nickname} disconneted!`);
-    });
-
-    this.socket.on("rooms", (data) => {
-      console.log(data);
     });
   },
 });

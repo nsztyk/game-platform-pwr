@@ -9,12 +9,9 @@ const io = require("socket.io")(server, {
 });
 
 const users = {}
-let rooms = [
-  {
-    name: 'room1',
-    id: 1
-  }
-]
+
+let rooms = []
+
 
 server.listen(3000)
 
@@ -22,18 +19,31 @@ io.on('connection', socket => {
 
   socket.emit('rooms', rooms)
 
-  socket.on('new-user', name => {
-    users[socket.id] = name
-    socket.broadcast.emit('user-connected', name)
+  socket.on('new-user', ({ nickname, id }) => {
+    socket.join(id)
+    users[socket.id] = nickname
+    socket.to(id).emit('user-connected', nickname)
   })
 
-  socket.on('send-chat-message', message => {
-    socket.broadcast.emit('chat-message', { message: message, nickname: users[socket.id] })
+  socket.on('new-room', () => {
+    const lastId = rooms.length === 0 ? 0 : rooms[rooms.length - 1].id + 1
+    rooms.push({
+      name: `room${lastId}`,
+      id: lastId
+    })
+    socket.emit('join-created-room', lastId)
+    io.emit('rooms', rooms)
   })
 
-  socket.on('disconnect', () => {
-    socket.broadcast.emit('user-disconnected', users[socket.id])
+  socket.on('send-chat-message', ({ message, id }) => {
+    socket.to(id).emit('chat-message', { message: message, nickname: users[socket.id] })
+  })
+
+  socket.on('disconnecting', () => {
+    const socketRooms = socket.rooms
+    for (room of socketRooms)
+      socket.to(room).emit('user-disconnected', users[socket.id])
     delete users[socket.id]
-  })
+  });
 })
 

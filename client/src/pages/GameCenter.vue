@@ -38,38 +38,17 @@ export default defineComponent({
       removeToken();
       router.push({ name: "Account" });
     },
-    sendMessage() {
-      this.socket.emit("send-chat-message", this.messageText);
-      this.messages.push(`You: ${this.messageText}`);
-      this.messageText = "";
-    },
     createNewRoom() {
-      console.log("XD");
-    }
+      this.socket.emit("new-room");
+    },
   },
   created() {
-    this.socket.emit(
-      "new-user",
-      Math.random()
-        .toString(36)
-        .slice(2)
-    );
-
-    this.socket.on("chat-message", ({ message, nickname }) => {
-      this.messages.push(`${nickname}: ${message}`);
-    });
-
-    this.socket.on("user-connected", (nickname) => {
-      this.messages.push(`${nickname} joined!`);
-    });
-
-    this.socket.on("user-disconnected", (nickname) => {
-      this.messages.push(`${nickname} disconneted!`);
-    });
-
     this.socket.on("rooms", (rooms) => {
-      console.log(rooms);
       this.rooms = rooms;
+    });
+
+    this.socket.on("join-created-room", (id) => {
+      router.push({ name: "Room", params: { id: id } });
     });
   },
 });
