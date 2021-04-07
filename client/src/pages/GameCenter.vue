@@ -48,6 +48,7 @@ export default defineComponent({
     });
 
     this.socket.on("join-created-room", (id) => {
+      this.socket.disconnect()
       router.push({ name: "Room", params: { id: id } });
     });
   },

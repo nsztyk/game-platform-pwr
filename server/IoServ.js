@@ -41,9 +41,17 @@ io.on('connection', socket => {
 
   socket.on('disconnecting', () => {
     const socketRooms = socket.rooms
-    for (room of socketRooms)
-      socket.to(room).emit('user-disconnected', users[socket.id])
+    for (socketRoom of socketRooms) {
+      socket.to(socketRoom).emit('user-disconnected', users[socket.id])
+      const roomInfo = io.sockets.adapter.rooms.get(socketRoom)
+      if (roomInfo.size === 1)
+        rooms = rooms.filter( room => room.id != socketRoom )
+    }
     delete users[socket.id]
   });
+
+  socket.on('disconnect', () => {
+    io.emit('rooms', rooms)
+  })
 })
 
