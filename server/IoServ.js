@@ -12,6 +12,22 @@ const users = {}
 
 let rooms = []
 
+const addUserToRoom = (roomId, nickname) => {
+  rooms = rooms.map( room => {
+    if (room.id == roomId)
+      room.users.push(nickname)
+    return room
+  })
+}
+
+const deleteUserFromRooms = (roomsId, nickname) => {
+  rooms = rooms.map( room => {
+    if (roomsId.includes(room.id.toString())){
+      room.users = room.users.filter(user => user != nickname)
+    }
+    return room
+  }) 
+}
 
 server.listen(3000)
 
@@ -22,14 +38,17 @@ io.on('connection', socket => {
   socket.on('new-user', ({ nickname, id }) => {
     socket.join(id)
     users[socket.id] = nickname
+    addUserToRoom(id, nickname)
     socket.to(id).emit('user-connected', nickname)
+    io.emit('rooms', rooms)
   })
 
   socket.on('new-room', () => {
     const lastId = rooms.length === 0 ? 0 : rooms[rooms.length - 1].id + 1
     rooms.push({
       name: `room${lastId}`,
-      id: lastId
+      id: lastId,
+      users: []
     })
     socket.emit('join-created-room', lastId)
     io.emit('rooms', rooms)
@@ -41,6 +60,7 @@ io.on('connection', socket => {
 
   socket.on('disconnecting', () => {
     const socketRooms = socket.rooms
+    deleteUserFromRooms(Array.from(socketRooms), users[socket.id])
     for (socketRoom of socketRooms) {
       socket.to(socketRoom).emit('user-disconnected', users[socket.id])
       const roomInfo = io.sockets.adapter.rooms.get(socketRoom)
@@ -48,10 +68,7 @@ io.on('connection', socket => {
         rooms = rooms.filter( room => room.id != socketRoom )
     }
     delete users[socket.id]
-  });
-
-  socket.on('disconnect', () => {
     io.emit('rooms', rooms)
-  })
+  });
 })
 
