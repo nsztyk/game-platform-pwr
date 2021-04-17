@@ -22,12 +22,12 @@ const routes: Array<RouteRecordRaw> = [
   {
     path: '/games',
     name: "Game",
-    component: () => import(/* webpackChunkName: "gameCenter" */ '../pages/GameCenter.vue'),
+    component: () => import(/* webpackChunkName: "gameCenter" */ '../pages/BrowseRooms.vue'),
   },
   {
     path: '/games/:id',
     name: 'Room',
-    component: () => import(/* webpackChunkName: "chooseGame" */ '../pages/ChooseGame.vue'),
+    component: () => import(/* webpackChunkName: "chooseGame" */ '../pages/Room.vue'),
   }
 ]
 

@@ -5,12 +5,13 @@
       log out
     </button>
     <button @click="createNewRoom">Create new room</button>
-    <h2>Craeted rooms</h2>
+    <h2>Created rooms</h2>
     <ul>
       <li v-for="(room, index) in rooms" :key="index">
         <router-link :to="{ name: 'Room', params: { id: room.id } }">
           {{ room.name }}
         </router-link>
+        {{ room.users }}
       </li>
     </ul>
   </div>
@@ -48,7 +49,7 @@ export default defineComponent({
     });
 
     this.socket.on("join-created-room", (id) => {
-      this.socket.disconnect()
+      this.socket.disconnect();
       router.push({ name: "Room", params: { id: id } });
     });
   },
