@@ -1,5 +1,5 @@
 <template>
-  <div class="flex flex-col w-1/4 mx-auto">
+  <div class="flex flex-col mx-auto w-7/12 sm:w-8/12 md:w-7/12 lg:w-5/12 xl:w-4/12">
     <h1>You are log-in</h1>
     <button @click="logOut">
       log out
@@ -20,7 +20,7 @@
 <script lang="ts">
 import router from "@/router";
 import { defineComponent } from "vue";
-import { removeToken } from "../middleware/TokenService";
+import { removeToken, isTokenAuthorized } from "../middleware/TokenService";
 import io from "socket.io-client";
 
 export default defineComponent({
@@ -43,7 +43,10 @@ export default defineComponent({
       this.socket.emit("new-room");
     },
   },
-  created() {
+  async created() {
+    if (! await isTokenAuthorized()){
+      this.logOut();
+    } 
     this.socket.on("rooms", (rooms) => {
       this.rooms = rooms;
     });

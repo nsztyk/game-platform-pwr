@@ -46,6 +46,7 @@ export default defineComponent({
       const result = await loginUser(user);
       if (result.data.status === "ok") {
         setToken(result.data.data);
+        console.log('przeszło logowanie');
         router.push({ name: "Game" });
       }
     };

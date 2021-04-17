@@ -14,6 +14,7 @@
     "autoprefixer": "^9",
     "axios": "^0.21.1",
     "core-js": "^3.6.5",
+    "jsonwebtoken": "^8.5.1",
     "postcss": "^7",
     "socket.io-client": "^4.0.1",
     "tailwindcss": "npm:@tailwindcss/postcss7-compat@^2.0.2",
@@ -22,6 +23,7 @@
   },
   "devDependencies": {
     "@types/jest": "^24.0.19",
+    "@types/jsonwebtoken": "^8.5.1",
     "@typescript-eslint/eslint-plugin": "^2.33.0",
     "@typescript-eslint/parser": "^2.33.0",
     "@vue/cli-plugin-babel": "~4.5.0",

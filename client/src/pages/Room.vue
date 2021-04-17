@@ -1,5 +1,5 @@
 <template>
-  <div class="flex flex-col w-1/4 mx-auto">
+  <div class="flex flex-col mx-auto w-7/12 md:w-7/12 lg:w-5/12 xl:w-4/12">
     <h1>You are log-in</h1>
     <button @click="logOut">
       log out
@@ -19,7 +19,7 @@
 <script lang="ts">
 import router from "@/router";
 import { defineComponent } from "vue";
-import { removeToken } from "../middleware/TokenService";
+import { removeToken, isTokenAuthorized, getUsername } from "../middleware/TokenService";
 import io from "socket.io-client";
 
 export default defineComponent({
@@ -39,17 +39,20 @@ export default defineComponent({
       router.push({ name: "Account" });
     },
     sendMessage() {
-      this.socket.emit("send-chat-message", {message: this.messageText, id: this.destinationId});
+      this.socket.emit("send-chat-message", {
+        message: this.messageText,
+        id: this.destinationId,
+      });
       this.messages.push(`You: ${this.messageText}`);
       this.messageText = "";
     },
   },
-  created() {
+  async created() {
+    if (! await isTokenAuthorized()) this.logOut();
+
     this.socket.emit("new-user", {
-      nickname: Math.random()
-        .toString(36)
-        .slice(2),
-      id: this.destinationId
+      nickname: getUsername(),
+      id: this.destinationId,
     });
 
     this.socket.on("chat-message", ({ message, nickname }) => {
