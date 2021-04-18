@@ -15,6 +15,9 @@
     type="password"
     v-model="password"
   />
+  <div v-if="errorMessage" class="text-center mb-4 text-red-500 font-normal">
+    <span>{{ errorMessage }}</span>
+  </div>
   <form-button buttonText="Login" @click="handleLogin" />
   <form-link :target="{ name: 'Register' }" navText="Create an account" />
 </template>
@@ -36,8 +39,11 @@ export default defineComponent({
   setup() {
     const password = ref("");
     const username = ref("");
+    const errorMessage = ref("");
 
     const handleLogin = async () => {
+      errorMessage.value = ""
+
       const user = {
         username: username.value,
         password: password.value,
@@ -48,12 +54,15 @@ export default defineComponent({
         setToken(result.data.data);
         console.log('przeszło logowanie');
         router.push({ name: "Game" });
+      } else {
+        errorMessage.value = result.data.error
       }
     };
     return {
       password,
       username,
       handleLogin,
+      errorMessage
     };
   },
 });
