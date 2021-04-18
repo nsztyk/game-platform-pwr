@@ -14,7 +14,10 @@ router.post('/register', async (req, res) => {
   if (user == undefined || (!user.hasOwnProperty('username') || !user.hasOwnProperty('password')))
     return res.json({ status: 'error', error: 'Invalid user parameters' })
 
-  const { username, password: plainTextPassword } = user;
+  const { username, password: plainTextPassword, repeatedPassword } = user;
+  
+  if (plainTextPassword !== repeatedPassword)
+    return res.json({status: 'error', error: 'Passwords do not match'})
 
   // TODO Regex for password and username
   const password = await bcrypt.hash(plainTextPassword, 10);

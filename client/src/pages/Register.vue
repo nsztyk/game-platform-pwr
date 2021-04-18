@@ -19,8 +19,12 @@
     labelText="Repeat password"
     placeholderText="Enter password"
     type="password"
+    v-model="repeatedPassword"
   />
-  <form-button buttonText="Register" @click="handleRegister"/>
+  <div v-if="errorMessage" class="text-center mb-4 text-red-500 font-normal">
+    <span>{{ errorMessage }}</span>
+  </div>
+  <form-button buttonText="Register" @click="handleRegister" />
   <form-link :target="{ name: 'Login' }" navText="Login to exsting account" />
 </template>
 
@@ -31,6 +35,7 @@ import FormLink from "@/components/FormLink.vue";
 
 import { defineComponent, ref } from "vue";
 import { registerUser } from "@/middleware/AuthenticationService";
+import router from "@/router";
 
 export default defineComponent({
   name: "Register",
@@ -38,21 +43,38 @@ export default defineComponent({
   setup() {
     const password = ref("");
     const username = ref("");
+    const repeatedPassword = ref("");
+    const errorMessage = ref("");
 
     const handleRegister = async () => {
-      console.log("loggin");
+      errorMessage.value = "";
+      if (repeatedPassword.value !== password.value) {
+        errorMessage.value = "Passwords do not match";
+        return;
+      }
+
       const user = {
         username: username.value,
         password: password.value,
+        repeatedPassword: repeatedPassword.value,
       };
-      
+
       // eslint-disable-next-line
       const res = await registerUser(user);
+
+      if (res.data.status == "error") {
+        errorMessage.value = res.data.error;
+        return;
+      }
+
+      router.push({ name: "Login" });
     };
     return {
       password,
+      repeatedPassword,
       username,
       handleRegister,
+      errorMessage,
     };
   },
 });
