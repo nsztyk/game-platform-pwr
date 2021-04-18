@@ -13,27 +13,53 @@ const users = {}
 let rooms = []
 
 const addUserToRoom = (roomId, nickname) => {
-  rooms = rooms.map( room => {
+  rooms = rooms.map(room => {
     if (room.id == roomId)
       room.users.push(nickname)
     return room
   })
 }
 
+const deleteEmptyRooms = () => {
+  rooms = rooms.filter(room => room.users.length)
+}
+
 const deleteUserFromRooms = (roomsId, nickname) => {
-  rooms = rooms.map( room => {
-    if (roomsId.includes(room.id.toString())){
+  console.log(rooms);
+  console.log(roomsId);
+  console.log(nickname);
+  rooms = rooms.map(room => {
+    if (roomsId.includes(room.id)) {
       room.users = room.users.filter(user => user != nickname)
     }
     return room
-  }) 
+  })
+  console.log(rooms);
 }
+
 
 server.listen(3000)
 
 io.on('connection', socket => {
 
+  const handleDisconnecting = () => {
+    if (users[socket.id]) {
+      const socketRooms = socket.rooms
+      deleteUserFromRooms(Array.from(socketRooms), users[socket.id])
+      for (socketRoom of socketRooms) {
+        socket.to(socketRoom).emit('user-disconnected', users[socket.id])
+      }
+      deleteEmptyRooms()
+      delete users[socket.id]
+      io.emit('rooms', rooms)
+    }
+  }
+
   socket.emit('rooms', rooms)
+
+  socket.on('get-rooms', () => {
+    socket.emit('rooms', rooms)
+  })
 
   socket.on('new-user', ({ nickname, id }) => {
     socket.join(id)
@@ -58,17 +84,8 @@ io.on('connection', socket => {
     socket.to(id).emit('chat-message', { message: message, nickname: users[socket.id] })
   })
 
-  socket.on('disconnecting', () => {
-    const socketRooms = socket.rooms
-    deleteUserFromRooms(Array.from(socketRooms), users[socket.id])
-    for (socketRoom of socketRooms) {
-      socket.to(socketRoom).emit('user-disconnected', users[socket.id])
-      const roomInfo = io.sockets.adapter.rooms.get(socketRoom)
-      if (roomInfo.size === 1)
-        rooms = rooms.filter( room => room.id != socketRoom )
-    }
-    delete users[socket.id]
-    io.emit('rooms', rooms)
-  });
+  socket.on('disconnecting', () => handleDisconnecting());
+
+  socket.on('routeChange', () => handleDisconnecting());
 })
 

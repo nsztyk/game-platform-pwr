@@ -24,8 +24,11 @@ export const removeToken = () => {
 }
 
 export const isTokenAuthorized = async () => {
-  const res = await secret(getToken())
-  console.log(res);
-  console.log(res.data.status === "ok");
-  return res.data.status === "ok"
+  try {
+    const res = await secret(getToken())
+    return res.data.status === "ok"
+  } catch (e) {
+    console.log(e);
+    return false;
+  }
 }
