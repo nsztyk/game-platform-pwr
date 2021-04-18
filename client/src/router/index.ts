@@ -5,7 +5,7 @@ const routes: Array<RouteRecordRaw> = [
     path: '/account',
     name: "Account",
     redirect: { name: 'Login' },
-    component: () => import(/* webpackChunkName: "loginForm" */ '../pages/Account.vue'),
+    component: () => import(/* webpackChunkName: "Account" */ '../pages/Account.vue'),
     children: [
       {
         path: 'login',
@@ -22,12 +22,16 @@ const routes: Array<RouteRecordRaw> = [
   {
     path: '/games',
     name: "Game",
-    component: () => import(/* webpackChunkName: "gameCenter" */ '../pages/BrowseRooms.vue'),
+    component: () => import(/* webpackChunkName: "BrowseRooms" */ '../pages/BrowseRooms.vue'),
   },
   {
     path: '/games/:id',
     name: 'Room',
-    component: () => import(/* webpackChunkName: "chooseGame" */ '../pages/Room.vue'),
+    component: () => import(/* webpackChunkName: "Room" */ '../pages/Room.vue'),
+  },
+  {
+    path: "/:catchAll(.*)",
+    redirect: { name: 'Account' }
   }
 ]
 
