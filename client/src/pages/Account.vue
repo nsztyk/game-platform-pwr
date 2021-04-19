@@ -2,7 +2,7 @@
   <div class="svg-bg">
     <div class="container flex mx-auto h-screen items-center justify-center">
       <form
-        class="flex flex-col bg-gray-900 text-gray-200 text-xl pb-5 px-10 w-1/4 font-medium custom-shadow"
+        class="flex flex-col bg-gray-900 text-gray-200 text-xl pb-5 px-10 w-8/12 sm:w-7/12 md:w-5/12 lg:w-4/12 xl:w-3/12 font-medium custom-shadow"
         autocomplete="off"
         spellcheck="false"
       >

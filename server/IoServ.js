@@ -25,9 +25,6 @@ const deleteEmptyRooms = () => {
 }
 
 const deleteUserFromRooms = (roomsId, nickname) => {
-  console.log(rooms);
-  console.log(roomsId);
-  console.log(nickname);
   rooms = rooms.map(room => {
     if (roomsId.includes(room.id)) {
       room.users = room.users.filter(user => user != nickname)

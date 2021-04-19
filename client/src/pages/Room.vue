@@ -1,5 +1,5 @@
 <template>
-  <div class="flex flex-col mx-auto w-7/12 md:w-7/12 lg:w-5/12 xl:w-4/12">
+  <div class="flex flex-col mx-auto w-7/12 sm:w-8/12 md:w-7/12 lg:w-5/12 xl:w-4/12">
     <h1>You are log-in</h1>
     <button @click="logOut">
       log out
@@ -22,7 +22,6 @@ import { defineComponent } from "vue";
 import {
   removeToken,
   isTokenAuthorized,
-  getUsername,
 } from "../middleware/TokenService";
 import {
   joinRoom,
@@ -58,7 +57,7 @@ export default defineComponent({
     },
   },
   async created() {
-    // if (! await isTokenAuthorized()) this.logOut();
+    if (! await isTokenAuthorized()) this.logOut();
     joinRoom(Number(this.destinationId));
   },
 });

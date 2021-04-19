@@ -44,7 +44,7 @@ export default defineComponent({
     },
   },
   async created() {
-    // if (! await isTokenAuthorized()) this.logOut();
+    if (! await isTokenAuthorized()) this.logOut();
     connectToServer();
   },
 });

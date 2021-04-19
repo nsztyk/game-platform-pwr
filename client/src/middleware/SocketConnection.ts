@@ -1,4 +1,5 @@
 import router from '@/router';
+import { getUsername } from './TokenService'
 import io, { Socket } from 'socket.io-client'
 import { ref, computed } from 'vue';
 
@@ -53,10 +54,8 @@ export const createNewRoom = () => {
 }
 
 export const joinRoom = (id: number) => {
-  const date = new Date()
   socket.emit("new-user", {
-    // nickname: getUsername(),
-    nickname: date.getMilliseconds() + "k",
+    nickname: getUsername(),
     id
   });
 }
