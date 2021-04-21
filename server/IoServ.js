@@ -28,9 +28,15 @@ const deleteUserFromRooms = (roomsId, nickname) => {
   rooms = rooms.map(room => {
     if (roomsId.includes(room.id)) {
       room.users = room.users.filter(user => user != nickname)
+      // pass admin
+      room.admin = room.users[0]
     }
     return room
   })
+}
+
+const getPlayers = () => {
+  return Object.values(users)
 }
 
 
@@ -39,17 +45,15 @@ server.listen(3000)
 io.on('connection', socket => {
 
   const handleDisconnecting = () => {
-    if (users[socket.id]) {
-      const socketRooms = socket.rooms
-      deleteUserFromRooms(Array.from(socketRooms), users[socket.id])
-      for (socketRoom of socketRooms) {
-        socket.to(socketRoom).emit('user-disconnected', users[socket.id])
-      }
-      deleteEmptyRooms()
-      delete users[socket.id]
-      io.emit('rooms', rooms)
-      console.log(users);
+    const socketRooms = socket.rooms
+    deleteUserFromRooms(Array.from(socketRooms), users[socket.id])
+    for (socketRoom of socketRooms) {
+      socket.to(socketRoom).emit('user-disconnected', users[socket.id])
     }
+    deleteEmptyRooms()
+    delete users[socket.id]
+    io.emit('rooms', rooms)
+    io.emit('connected-players', getPlayers())
   }
 
   socket.emit('rooms', rooms)
@@ -60,13 +64,13 @@ io.on('connection', socket => {
 
   socket.on('register-user-on-server', nickname => {
     users[socket.id] = nickname
-    console.log(users);
+    io.emit('connected-players', getPlayers())
   })
 
-  socket.on('join-room', ({ nickname, id }) => {
+  socket.on('join-room', (id) => {
     socket.join(id)
-    addUserToRoom(id, nickname)
-    socket.to(id).emit('user-connected', nickname)
+    addUserToRoom(id, users[socket.id])
+    socket.to(id).emit('user-connected', users[socket.id])
     io.emit('rooms', rooms)
   })
 
@@ -75,7 +79,8 @@ io.on('connection', socket => {
     rooms.push({
       name: `room${lastId}`,
       id: lastId,
-      users: []
+      users: [],
+      admin: users[socket.id]
     })
     socket.emit('join-created-room', lastId)
     io.emit('rooms', rooms)

@@ -14,8 +14,19 @@
           {{ room.name }}
         </router-link>
         {{ room.users }}
+        <p class="text-green-500">
+        {{ room.admin }}
+        </p>
       </li>
     </ul>
+    <div class="my-10">
+      <ul>
+        <p>PLAYERS</p>
+        <li v-for="(player, index) in getPlayers" :key="index">
+          {{ player }}
+        </li>
+      </ul>
+    </div>
   </div>
 </template>
 
@@ -27,6 +38,8 @@ import {
   connectToServer,
   createNewRoom,
   getRooms,
+  getPlayers,
+  exitRoom,
 } from "../middleware/SocketConnection";
 
 export default defineComponent({
@@ -35,6 +48,7 @@ export default defineComponent({
     return {
       createNewRoom,
       getRooms,
+      getPlayers,
     };
   },
   methods: {
@@ -43,9 +57,12 @@ export default defineComponent({
       router.push({ name: "Account" });
     },
   },
+  beforeRouteLeave(to) {
+    if (to.name !== "Room") exitRoom();
+  },
   async created() {
-    if (! await isTokenAuthorized()) this.logOut();
-    connectToServer();
+    if (await isTokenAuthorized()) connectToServer();
+    else this.logOut();
   },
 });
 </script>

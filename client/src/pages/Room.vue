@@ -4,6 +4,9 @@
     <button @click="logOut">
       log out
     </button>
+    <div v-if="isAdmin" class="text-lg">
+      YOU ARE ADMIN
+    </div>
     <input type="text" placeholder="message" v-model="messageText" />
     <button @click="sendMessageToOthers">Send</button>
     <div>
@@ -28,6 +31,7 @@ import {
   sendMessage,
   getMessages,
   exitRoom,
+  isAdmin,
 } from "../middleware/SocketConnection";
 
 export default defineComponent({
@@ -35,12 +39,13 @@ export default defineComponent({
   data() {
     return {
       messageText: "",
-      destinationId: this.$route.params.id,
+      destinationId: Number(this.$route.params.id),
     };
   },
   setup() {
     return {
       getMessages,
+      isAdmin
     };
   },
   beforeRouteLeave() {
@@ -52,13 +57,13 @@ export default defineComponent({
       router.push({ name: "Account" });
     },
     sendMessageToOthers() {
-      sendMessage(this.messageText, Number(this.destinationId));
+      sendMessage(this.messageText);
       this.messageText = "";
     },
   },
   async created() {
-    if (! await isTokenAuthorized()) this.logOut();
-    joinRoom(Number(this.destinationId));
+    if (await isTokenAuthorized()) joinRoom(this.destinationId);
+    else this.logOut();
   },
 });
 </script>

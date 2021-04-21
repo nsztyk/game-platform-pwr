@@ -8,12 +8,15 @@ interface RoomsInterface {
   name: string;
   users: string[];
   id: number;
+  admin: string;
 }
 
 
 let socket = null as unknown as Socket;
 const rooms = ref<RoomsInterface[]>([])
 const messages = ref<string[]>([])
+const players = ref<string[]>([])
+const currentRoom = ref<number>()
 
 const addOnEvents = () => {
   socket.on("rooms", (roomsInfo) => {
@@ -35,6 +38,10 @@ const addOnEvents = () => {
   socket.on("user-disconnected", (nickname) => {
     messages.value.push(`${nickname} disconneted!`);
   });
+
+  socket.on("connected-players", (playersInfo) => {
+    players.value = playersInfo
+  })
 }
 
 
@@ -46,7 +53,9 @@ export const connectToServer = () => {
 
 export const exitRoom = () => {
   messages.value = []
-  socket.disconnect();
+  currentRoom.value = NaN
+  if (socket)
+    socket.disconnect();
 }
 
 
@@ -55,19 +64,25 @@ export const createNewRoom = () => {
 }
 
 export const joinRoom = (id: number) => {
-  socket.emit("join-room", {
-    nickname: getUsername(),
-    id
-  });
+  socket.emit("join-room", id);
+  currentRoom.value = id
 }
 
-export const sendMessage = (message: string, id: number) => {
+export const sendMessage = (message: string) => {
   socket.emit("send-chat-message", {
     message,
-    id
+    id: currentRoom
   })
   messages.value.push(`You: ${message}`)
 }
 
+export const isAdmin = computed(() => {
+  const room = rooms.value.filter(potentialRoom => potentialRoom.id == currentRoom.value)[0]
+  if (room)
+    return room.admin === getUsername()
+  return false
+})
+
 export const getRooms = computed(() => rooms.value);
 export const getMessages = computed(() => messages.value)
+export const getPlayers = computed(() => players.value)
