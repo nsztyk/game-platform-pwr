@@ -31,7 +31,6 @@ const deleteUserFromRooms = (roomsId, nickname) => {
     }
     return room
   })
-  console.log(rooms);
 }
 
 
@@ -49,6 +48,7 @@ io.on('connection', socket => {
       deleteEmptyRooms()
       delete users[socket.id]
       io.emit('rooms', rooms)
+      console.log(users);
     }
   }
 
@@ -58,9 +58,13 @@ io.on('connection', socket => {
     socket.emit('rooms', rooms)
   })
 
-  socket.on('new-user', ({ nickname, id }) => {
-    socket.join(id)
+  socket.on('register-user-on-server', nickname => {
     users[socket.id] = nickname
+    console.log(users);
+  })
+
+  socket.on('join-room', ({ nickname, id }) => {
+    socket.join(id)
     addUserToRoom(id, nickname)
     socket.to(id).emit('user-connected', nickname)
     io.emit('rooms', rooms)

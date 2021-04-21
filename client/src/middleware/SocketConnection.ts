@@ -40,6 +40,7 @@ const addOnEvents = () => {
 
 export const connectToServer = () => {
   socket = io('http://localhost:3000')
+  socket.emit('register-user-on-server', getUsername())
   addOnEvents()
 }
 
@@ -54,7 +55,7 @@ export const createNewRoom = () => {
 }
 
 export const joinRoom = (id: number) => {
-  socket.emit("new-user", {
+  socket.emit("join-room", {
     nickname: getUsername(),
     id
   });
