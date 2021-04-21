@@ -1,11 +1,13 @@
 <template>
   <div class="flex flex-col mx-auto w-7/12 sm:w-8/12 md:w-7/12 lg:w-5/12 xl:w-4/12">
-    <h1>You are log-in</h1>
     <button @click="logOut">
       log out
     </button>
-    <div v-if="isAdmin" class="text-lg">
-      YOU ARE ADMIN
+    <div v-if="isAdmin">
+      <p class="text-lg">You are admin, choose game to play</p>
+      <ul>
+        <li>Kółko i krzyżyk</li>
+      </ul>
     </div>
     <input type="text" placeholder="message" v-model="messageText" />
     <button @click="sendMessageToOthers">Send</button>

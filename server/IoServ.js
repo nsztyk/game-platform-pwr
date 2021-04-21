@@ -80,7 +80,8 @@ io.on('connection', socket => {
       name: `room${lastId}`,
       id: lastId,
       users: [],
-      admin: users[socket.id]
+      admin: users[socket.id],
+      game: undefined
     })
     socket.emit('join-created-room', lastId)
     io.emit('rooms', rooms)
@@ -93,5 +94,22 @@ io.on('connection', socket => {
   socket.on('disconnecting', () => handleDisconnecting());
 
   socket.on('routeChange', () => handleDisconnecting());
+
+  socket.on('game-move', (field) => {
+    
+  })
+
+
+  // TIC TAC TOE
+
+  
+
+
+
+
+
+
+
+
 })
 
