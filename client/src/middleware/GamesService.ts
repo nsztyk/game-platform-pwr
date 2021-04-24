@@ -1,4 +1,4 @@
-import { ref, computed } from 'vue';
+import { ref, computed, reactive } from 'vue';
 import { selectGameToPlay } from "./SocketConnection"
 
 export enum AvaliableGames {
@@ -7,7 +7,10 @@ export enum AvaliableGames {
 
 const gamesToPlay = ref<AvaliableGames[]>([AvaliableGames.tictactoe])
 
-export const gameState = ref([])
+export const gameState = reactive({
+  state: 0
+})
+
 export const gameComponent = ref<AvaliableGames>()
 
 export const chooseGame = (gameName: AvaliableGames) => {
@@ -24,3 +27,4 @@ export const exitGame = () => {
 
 export const getGames = computed(() => gamesToPlay.value)
 export const getGameComponent = computed(() => gameComponent.value)
+export const getGameState = computed(() => gameState)
