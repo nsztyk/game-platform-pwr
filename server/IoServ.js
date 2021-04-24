@@ -35,8 +35,17 @@ const deleteUserFromRooms = (roomsId, nickname) => {
   })
 }
 
+const isPlayerAdminInRoom = (nickname, roomId) => {
+  room = rooms.filter(room => room.id == roomId)[0]
+  return (room && room.admin == nickname)
+}
+
 const getPlayers = () => {
   return Object.values(users)
+}
+
+const getRoomWithId = (roomId) => {
+  return rooms.filter(room => room.id == roomId)[0]
 }
 
 
@@ -95,17 +104,22 @@ io.on('connection', socket => {
 
   socket.on('routeChange', () => handleDisconnecting());
 
-  socket.on('game-move', (field) => {
-    
+  /*
+
+   GAMES
+  
+  */
+  socket.on('chosen-game', ({ selectedGame, id }) => {
+    if (isPlayerAdminInRoom(users[socket.id], id)) {
+      const room = getRoomWithId(id)
+      room.game = selectedGame
+      initGameInRoom(room)
+    }
   })
 
-
-  // TIC TAC TOE
-
-  
-
-
-
+  const initGameInRoom = (room) => {
+    io.to(room.id).emit('chat-message', { message: `Game in ${room.game} started!`, nickname: 'system' })
+  }
 
 
 

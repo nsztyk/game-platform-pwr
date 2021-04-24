@@ -28,6 +28,7 @@ const addOnEvents = () => {
   });
 
   socket.on("chat-message", ({ message, nickname }) => {
+    console.log("XD");
     messages.value.push(`${nickname}: ${message}`);
   });
 
@@ -71,7 +72,7 @@ export const joinRoom = (id: number) => {
 export const sendMessage = (message: string) => {
   socket.emit("send-chat-message", {
     message,
-    id: currentRoom
+    id: currentRoom.value
   })
   messages.value.push(`You: ${message}`)
 }
@@ -86,3 +87,14 @@ export const isAdmin = computed(() => {
 export const getRooms = computed(() => rooms.value);
 export const getMessages = computed(() => messages.value)
 export const getPlayers = computed(() => players.value)
+
+
+// 
+import { AvaliableGames } from "./GamesService"
+
+export const selectGameToPlay = (chosenGame: AvaliableGames) => {
+  socket.emit('chosen-game', {
+    selectedGame: chosenGame,
+    id: currentRoom.value
+  })
+}

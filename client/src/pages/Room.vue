@@ -1,12 +1,16 @@
 <template>
-  <div class="flex flex-col mx-auto w-7/12 sm:w-8/12 md:w-7/12 lg:w-5/12 xl:w-4/12">
+  <div
+    class="flex flex-col mx-auto w-7/12 sm:w-8/12 md:w-7/12 lg:w-5/12 xl:w-4/12"
+  >
     <button @click="logOut">
       log out
     </button>
     <div v-if="isAdmin">
       <p class="text-lg">You are admin, choose game to play</p>
       <ul>
-        <li>Kółko i krzyżyk</li>
+        <li v-for="(game, index) in getGames" :key="index" @click="chooseGame(game)" class="cursor-pointer">
+          {{ game }}
+        </li>
       </ul>
     </div>
     <input type="text" placeholder="message" v-model="messageText" />
@@ -18,16 +22,14 @@
         </li>
       </ul>
     </div>
+    <component :is="chosenGameComponent" />
   </div>
 </template>
 
 <script lang="ts">
 import router from "@/router";
 import { defineComponent } from "vue";
-import {
-  removeToken,
-  isTokenAuthorized,
-} from "../middleware/TokenService";
+import { removeToken, isTokenAuthorized } from "../middleware/TokenService";
 import {
   joinRoom,
   sendMessage,
@@ -35,6 +37,7 @@ import {
   exitRoom,
   isAdmin,
 } from "../middleware/SocketConnection";
+import { getGames, chooseGame } from "../middleware/GamesService";
 
 export default defineComponent({
   name: "ChooseGame",
@@ -42,12 +45,15 @@ export default defineComponent({
     return {
       messageText: "",
       destinationId: Number(this.$route.params.id),
+      chosenGameComponent: undefined,
     };
   },
   setup() {
     return {
       getMessages,
-      isAdmin
+      isAdmin,
+      getGames,
+      chooseGame,
     };
   },
   beforeRouteLeave() {
