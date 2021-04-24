@@ -11,6 +11,9 @@ interface RoomsInterface {
   admin: string;
   game: AvaliableGames;
   playersMoveOrder: string[];
+  gameState: {
+    board: [];
+  };
 }
 
 
@@ -104,5 +107,13 @@ export const selectGameToPlay = (chosenGame: AvaliableGames) => {
   socket.emit('chosen-game', {
     selectedGame: chosenGame,
     id: currentRoom.value
+  })
+}
+
+export const makeMove = (move: string) => {
+  socket.emit('make-move', {
+    player: getUsername(),
+    roomId: currentRoom.value,
+    move
   })
 }

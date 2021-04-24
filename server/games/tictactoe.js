@@ -1,8 +1,3 @@
-let board =
-  ['', '', '',
-    '', '', '',
-    '', '', '']
-
 /* Fields
 ___________ 
 | 0 | 1 | 2 |
@@ -16,16 +11,23 @@ let whosTurn = 1
 let turnCounter = 1
 let winner = undefined
 
-export const move = (field) => {
-  board[field] = whosTurn === 1 ? 'x' : 'o'
-  if (gameEnded()){
-    winner = turnCounter === 9 ? 0 : whosTurn 
-    return true
+const tictactoeStartingState = () => {
+  return {
+    board:
+      ['', '', '',
+        '', '', '',
+        '', '', '']
   }
-  return false
 }
 
-const gameEnded = () => {
+const makeMove = (field, board) => {
+  board[field] = whosTurn === 1 ? 'x' : 'o'
+  gameEnded(board)
+  whosTurn *= -1
+  return board
+}
+
+const gameEnded = (board) => {
   if (turnCounter === 9){
     return true
   }
@@ -42,10 +44,11 @@ const gameEnded = () => {
   return false
 }
 
-export const getWinner = () =>{
+const getWinner = () =>{
   return winner
 }
 
-
-
-
+module.exports = {
+  tictactoeStartingState,
+  tictactoeMakeMove: makeMove
+}

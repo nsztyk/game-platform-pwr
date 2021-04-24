@@ -93,7 +93,8 @@ io.on('connection', socket => {
       users: [],
       admin: users[socket.id],
       game: undefined,
-      playersMoveOrder: []
+      playersMoveOrder: [],
+      gameState: {}
     })
     socket.emit('join-created-room', lastId)
     io.emit('rooms', rooms)
@@ -112,9 +113,14 @@ io.on('connection', socket => {
    GAMES
   
   */
+
+  const { tictactoeStartingState, tictactoeMakeMove } = require('./games/tictactoe');
+
+
   socket.on('chosen-game', ({ selectedGame, id }) => {
     if (isPlayerAdminInRoom(users[socket.id], id)) {
       const room = getRoomWithId(id)
+      // Check if game is avaliable
       room.game = selectedGame
       initGameInRoom(room)
     }
@@ -123,9 +129,35 @@ io.on('connection', socket => {
   const initGameInRoom = (room) => {
     const shuffledUsersList = room.users.slice().sort(() => Math.random() - 0.5)
     room.playersMoveOrder = shuffledUsersList
+    switch (room.game) {
+      case 'Tictactoe':
+        room.gameState = tictactoeStartingState()
+        break;
+      default:
+        break;
+    }
     io.to(room.id).emit('rooms', rooms)
-    io.to(room.id).emit('initalize-game-client', {game: room.game})
+    io.to(room.id).emit('initalize-game-client', { game: room.game })
   }
+
+  socket.on('make-move', ({ player, roomId, move }) => {
+    const room = getRoomWithId(roomId)
+    if (room.playersMoveOrder[0] === player) {
+      switch (room.game) {
+        case 'Tictactoe':
+          room.gameState.board = tictactoeMakeMove(move, room.gameState.board)
+          break;
+        default:
+          break;
+      }
+      console.log(room.playersMoveOrder);
+      
+      const [first, ...rest] = room.playersMoveOrder
+      room.playersMoveOrder = [...rest, first]
+      console.log(room.playersMoveOrder);
+    }
+    io.to(room.id).emit('rooms', rooms)
+  })
 
 
 

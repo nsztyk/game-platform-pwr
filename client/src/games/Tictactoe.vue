@@ -1,9 +1,10 @@
 <template>
   <div class="grid grid-cols-3" id="tictactoe-wrapper">
     <div
-      v-for="(boardPiece, index) in gameState"
+      v-for="(boardPiece, index) in getGameState"
       :key="index"
       class="square text-center"
+      @click="makeMove(index)"
     >
       {{ boardPiece }}
     </div>
@@ -12,12 +13,16 @@
 
 <script lang="ts">
 import { defineComponent } from "vue";
-import { gameState} from "../middleware/GamesService";
+import { getGameState, move} from "../middleware/GamesService";
 export default defineComponent({
   name: "Tictactoe",
   setup(){
+    const makeMove = (field: number) => {
+      move(field.toString())
+    }
     return {
-      gameState
+      getGameState,
+      makeMove
     }
   }
 });
