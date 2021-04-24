@@ -13,6 +13,7 @@ export let gameState = reactive<string[]>([])
 export const gameComponent = ref<AvaliableGames>()
 
 
+
 export const chooseGame = (gameName: AvaliableGames) => {
   selectGameToPlay(gameName)
 }

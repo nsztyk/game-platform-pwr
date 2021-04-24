@@ -23,6 +23,7 @@
       </ul>
     </div>
     <component :is="getGameComponent" />
+    {{roomDetails}}
   </div>
 </template>
 
@@ -36,9 +37,10 @@ import {
   getMessages,
   exitRoom,
   isAdmin,
+  roomDetails
 } from "../middleware/SocketConnection";
 import { getGames, chooseGame, getGameComponent, exitGame} from "../middleware/GamesService";
-import Tictactoe from "../games/Tictactoe.vue";
+import Tictactoe from "../games/Tictactoe.vue"
 
 export default defineComponent({
   name: "ChooseGame",
@@ -58,6 +60,7 @@ export default defineComponent({
       getGames,
       chooseGame,
       getGameComponent,
+      roomDetails,
     };
   },
   beforeRouteLeave() {

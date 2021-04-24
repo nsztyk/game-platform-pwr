@@ -28,6 +28,8 @@ const deleteUserFromRooms = (roomsId, nickname) => {
   rooms = rooms.map(room => {
     if (roomsId.includes(room.id)) {
       room.users = room.users.filter(user => user != nickname)
+      if (room.playersMoveOrder)
+        room.playersMoveOrder = room.playersMoveOrder.filter(user => user != nickname)
       // pass admin
       room.admin = room.users[0]
     }
@@ -90,7 +92,8 @@ io.on('connection', socket => {
       id: lastId,
       users: [],
       admin: users[socket.id],
-      game: undefined
+      game: undefined,
+      playersMoveOrder: []
     })
     socket.emit('join-created-room', lastId)
     io.emit('rooms', rooms)
@@ -118,6 +121,8 @@ io.on('connection', socket => {
   })
 
   const initGameInRoom = (room) => {
+    const shuffledUsersList = room.users.slice().sort(() => Math.random() - 0.5)
+    room.playersMoveOrder = shuffledUsersList
     io.to(room.id).emit('rooms', rooms)
     io.to(room.id).emit('initalize-game-client', {game: room.game})
   }

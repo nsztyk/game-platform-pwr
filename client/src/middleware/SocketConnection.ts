@@ -10,6 +10,7 @@ interface RoomsInterface {
   id: number;
   admin: string;
   game: AvaliableGames;
+  playersMoveOrder: string[];
 }
 
 
@@ -90,6 +91,7 @@ export const isAdmin = computed(() => {
   return false
 })
 
+export const roomDetails = computed(() => rooms.value.filter(potentialRoom => potentialRoom.id == currentRoom.value)[0])
 export const getRooms = computed(() => rooms.value);
 export const getMessages = computed(() => messages.value)
 export const getPlayers = computed(() => players.value)
