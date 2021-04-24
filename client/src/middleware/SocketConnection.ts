@@ -2,13 +2,14 @@ import router from '@/router';
 import { getUsername } from './TokenService'
 import io, { Socket } from 'socket.io-client'
 import { ref, computed } from 'vue';
-
+import { AvaliableGames, initGame } from "./GamesService"
 
 interface RoomsInterface {
   name: string;
   users: string[];
   id: number;
   admin: string;
+  game: AvaliableGames;
 }
 
 
@@ -43,6 +44,11 @@ const addOnEvents = () => {
   socket.on("connected-players", (playersInfo) => {
     players.value = playersInfo
   })
+
+  socket.on("initalize-game-client", ({ game }) => {
+    initGame(game)
+  })
+
 }
 
 
@@ -89,8 +95,8 @@ export const getMessages = computed(() => messages.value)
 export const getPlayers = computed(() => players.value)
 
 
-// 
-import { AvaliableGames } from "./GamesService"
+// Games section
+
 
 export const selectGameToPlay = (chosenGame: AvaliableGames) => {
   socket.emit('chosen-game', {

@@ -22,7 +22,7 @@
         </li>
       </ul>
     </div>
-    <component :is="chosenGameComponent" />
+    <component :is="getGameComponent" />
   </div>
 </template>
 
@@ -37,16 +37,19 @@ import {
   exitRoom,
   isAdmin,
 } from "../middleware/SocketConnection";
-import { getGames, chooseGame } from "../middleware/GamesService";
+import { getGames, chooseGame, getGameComponent, exitGame } from "../middleware/GamesService";
+import Tictactoe from "../games/Tictactoe.vue";
 
 export default defineComponent({
   name: "ChooseGame",
   data() {
     return {
       messageText: "",
-      destinationId: Number(this.$route.params.id),
-      chosenGameComponent: undefined,
+      destinationId: Number(this.$route.params.id)
     };
+  },
+  components: {
+    Tictactoe
   },
   setup() {
     return {
@@ -54,10 +57,12 @@ export default defineComponent({
       isAdmin,
       getGames,
       chooseGame,
+      getGameComponent
     };
   },
   beforeRouteLeave() {
     exitRoom();
+    exitGame();
   },
   methods: {
     logOut() {

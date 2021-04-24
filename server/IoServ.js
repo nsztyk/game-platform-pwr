@@ -118,7 +118,8 @@ io.on('connection', socket => {
   })
 
   const initGameInRoom = (room) => {
-    io.to(room.id).emit('chat-message', { message: `Game in ${room.game} started!`, nickname: 'system' })
+    io.to(room.id).emit('rooms', rooms)
+    io.to(room.id).emit('initalize-game-client', {game: room.game})
   }
 
 

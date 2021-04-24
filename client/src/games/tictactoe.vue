@@ -1,13 +1,13 @@
 <template>
   <div style="height: 200px; width: 200px; background-color:blue">
-    TICTACTORE
+    TICTACTOE
   </div>
 </template>
 
-<script setup lang="ts">
-import { defineComponent } from "node_modules/vue/dist/vue";
+<script lang="ts">
+import { defineComponent } from "vue";
 export default defineComponent({
-  name: 'tictactoe'
+  name: 'Tictactoe'
 });
 </script>
 
