@@ -5,11 +5,7 @@ ___________
 | 6 | 7 | 8 |
 |___________|
  */
-// x     o
-// 1 || -1
-let whosTurn = 1
-let turnCounter = 1
-let winner = undefined
+
 
 const tictactoeStartingState = () => {
   return {
@@ -20,33 +16,39 @@ const tictactoeStartingState = () => {
   }
 }
 
-const makeMove = (field, board) => {
-  board[field] = whosTurn === 1 ? 'x' : 'o'
-  gameEnded(board)
-  whosTurn *= -1
-  return board
+const turnCounter = (board) => {
+  return board.filter(field => field).length
 }
 
-const gameEnded = (board) => {
-  if (turnCounter === 9){
-    return true
+const makeMove = (field, board) => {
+  const currentTurn = turnCounter(board)
+  board[field] = currentTurn % 2 === 0 ? 'x' : 'o'
+  const whoWon = gameEnded(board, currentTurn)
+  return {
+    boardAfterMove: board,
+    whoWon
+  }
+}
+
+
+
+const gameEnded = (board, currentTurn) => {
+  if (currentTurn === 8){
+    return 'd'
   }
   for (let i = 0; i < 3; i++) {
-    if (board[i] === board[i + 3] && board[i] === board[i + 6])
-      return true
-    if (board[i * 3] === board[i * 3 + 1] && board[i * 3] === board[i * 3 + 2])
-      return true
+    if (board[i] && board[i] === board[i + 3] && board[i] === board[i + 6])
+      return board[i]
+    if (board[i*3] && board[i * 3] === board[i * 3 + 1] && board[i * 3] === board[i * 3 + 2])
+      return board[i*3]
   }
-  if (board[0] === board[4] && board[0] === board[8])
-    return true
-  if (board[2] === board[4] && board[2] === board[6])
-    return true
+  if (board[0] && board[0] === board[4] && board[0] === board[8])
+    return board[0]
+  if (board[2] && board[2] === board[4] && board[2] === board[6])
+    return board[2]
   return false
 }
 
-const getWinner = () =>{
-  return winner
-}
 
 module.exports = {
   tictactoeStartingState,

@@ -120,7 +120,7 @@ io.on('connection', socket => {
   socket.on('chosen-game', ({ selectedGame, id }) => {
     if (isPlayerAdminInRoom(users[socket.id], id)) {
       const room = getRoomWithId(id)
-      // Check if game is avaliable
+      // TODO Check if game is avaliable
       room.game = selectedGame
       initGameInRoom(room)
     }
@@ -145,16 +145,15 @@ io.on('connection', socket => {
     if (room.playersMoveOrder[0] === player) {
       switch (room.game) {
         case 'Tictactoe':
-          room.gameState.board = tictactoeMakeMove(move, room.gameState.board)
+          const { boardAfterMove, whoWon } = tictactoeMakeMove(move, room.gameState.board)
+          room.gameState.board = boardAfterMove
+          room.gameState.winner = whoWon
           break;
         default:
           break;
-      }
-      console.log(room.playersMoveOrder);
-      
+      }      
       const [first, ...rest] = room.playersMoveOrder
       room.playersMoveOrder = [...rest, first]
-      console.log(room.playersMoveOrder);
     }
     io.to(room.id).emit('rooms', rooms)
   })

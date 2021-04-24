@@ -13,6 +13,7 @@ interface RoomsInterface {
   playersMoveOrder: string[];
   gameState: {
     board: [];
+    winner?: string;
   };
 }
 

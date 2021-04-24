@@ -40,4 +40,5 @@ export const isMyTurn = computed(() => {
 export const getGames = computed(() => gamesToPlay.value)
 export const getGameComponent = computed(() => gameComponent.value)
 export const getGameState = computed(() => roomDetails.value.gameState.board)
+export const getWinner = computed(() => roomDetails.value.gameState.winner)
 

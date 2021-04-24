@@ -9,11 +9,12 @@
       {{ boardPiece }}
     </div>
   </div>
+  <div class="text-xl" v-if="getWinner">WINNER: {{getWinner}}</div>
 </template>
 
 <script lang="ts">
 import { defineComponent } from "vue";
-import { getGameState, move} from "../middleware/GamesService";
+import { getGameState, move, getWinner} from "../middleware/GamesService";
 export default defineComponent({
   name: "Tictactoe",
   setup(){
@@ -22,7 +23,8 @@ export default defineComponent({
     }
     return {
       getGameState,
-      makeMove
+      makeMove,
+      getWinner,
     }
   }
 });
