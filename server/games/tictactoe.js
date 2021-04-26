@@ -13,6 +13,8 @@ const tictactoeStartingState = () => {
         '', '', '']
 }
 
+const tictactoeMaxPlayers = 2
+
 const turnCounter = (board) => {
   return board.filter(field => field).length
 }
@@ -50,5 +52,6 @@ const gameEnded = (board, currentTurn) => {
 
 module.exports = {
   tictactoeStartingState,
-  tictactoeMakeMove: makeMove
+  tictactoeMakeMove: makeMove,
+  tictactoeMaxPlayers,
 }

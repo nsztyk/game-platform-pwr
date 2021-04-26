@@ -117,7 +117,7 @@ io.on('connection', socket => {
   
   */
 
-  const { tictactoeStartingState, tictactoeMakeMove } = require('./games/tictactoe');
+  const { tictactoeStartingState, tictactoeMakeMove, tictactoeMaxPlayers } = require('./games/tictactoe');
 
 
   socket.on('chosen-game', ({ selectedGame, id }) => {
@@ -130,18 +130,17 @@ io.on('connection', socket => {
   })
 
   const initGameInRoom = (room) => {
-    const shuffledUsersList = room.users.slice().sort(() => Math.random() - 0.5)
-  
     roomDetails[room.id] = { playersMoveOrder: [], gameState: [], winner: "" }
-    roomDetails[room.id].playersMoveOrder = shuffledUsersList
+    let shuffledUsersList = []
     switch (room.game) {
       case 'Tictactoe':
         roomDetails[room.id].gameState = tictactoeStartingState()
+        shuffledUsersList = room.users.slice(0, tictactoeMaxPlayers).sort(() => Math.random() - 0.5)
         break;
       default:
         break;
     }
-
+    roomDetails[room.id].playersMoveOrder = shuffledUsersList
     io.to(room.id).emit('rooms', rooms)
     io.to(room.id).emit('initalize-game-client', { game: room.game, gameDetails: roomDetails[room.id] })
   }
