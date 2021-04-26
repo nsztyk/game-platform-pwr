@@ -50,6 +50,32 @@ const getRoomWithId = (roomId) => {
   return rooms.filter(room => room.id == roomId)[0]
 }
 
+const publicRoomsInfo = () => {
+  return rooms.map(room => {
+    return {
+      name: room.name,
+      id: room.id,
+      users: room.users,
+      game: room.game,
+      admin: room.admin
+    }
+  })
+}
+
+const publicRoomsWithPrivateRoomInfo = (roomId) => {
+  return rooms.map(room => {
+    if (room.id === roomId)
+      return room
+    return {
+      name: room.name,
+      id: room.id,
+      users: room.users,
+      game: room.game,
+      admin: room.admin
+    }
+  })
+}
+
 
 server.listen(3000)
 
@@ -63,14 +89,14 @@ io.on('connection', socket => {
     }
     deleteEmptyRooms()
     delete users[socket.id]
-    io.emit('rooms', rooms)
+    io.emit('rooms', publicRoomsInfo())
     io.emit('connected-players', getPlayers())
   }
 
-  socket.emit('rooms', rooms)
+  socket.emit('rooms', publicRoomsInfo())
 
   socket.on('get-rooms', () => {
-    socket.emit('rooms', rooms)
+    socket.emit('rooms', publicRoomsInfo())
   })
 
   socket.on('register-user-on-server', nickname => {
@@ -82,7 +108,7 @@ io.on('connection', socket => {
     socket.join(id)
     addUserToRoom(id, users[socket.id])
     socket.to(id).emit('user-connected', users[socket.id])
-    io.emit('rooms', rooms)
+    io.emit('rooms', publicRoomsInfo())
   })
 
   socket.on('new-room', () => {
@@ -97,7 +123,7 @@ io.on('connection', socket => {
       gameState: {}
     })
     socket.emit('join-created-room', lastId)
-    io.emit('rooms', rooms)
+    io.emit('rooms', publicRoomsInfo())
   })
 
   socket.on('send-chat-message', ({ message, id }) => {
@@ -136,13 +162,14 @@ io.on('connection', socket => {
       default:
         break;
     }
-    io.to(room.id).emit('rooms', rooms)
+    io.emit('rooms', publicRoomsInfo())
+    io.to(room.id).emit('rooms', publicRoomsWithPrivateRoomInfo(room.id))
     io.to(room.id).emit('initalize-game-client', { game: room.game })
   }
 
-  socket.on('make-move', ({ player, roomId, move }) => {
+  socket.on('make-move', ({roomId, move }) => {
     const room = getRoomWithId(roomId)
-    if (room.playersMoveOrder[0] === player) {
+    if (room.playersMoveOrder[0] === users[socket.id]) {
       switch (room.game) {
         case 'Tictactoe':
           const { boardAfterMove, whoWon } = tictactoeMakeMove(move, room.gameState.board)
@@ -155,7 +182,7 @@ io.on('connection', socket => {
       const [first, ...rest] = room.playersMoveOrder
       room.playersMoveOrder = [...rest, first]
     }
-    io.to(room.id).emit('rooms', rooms)
+    io.to(room.id).emit('rooms', publicRoomsWithPrivateRoomInfo(room.id))
   })
 
 

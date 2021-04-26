@@ -112,6 +112,7 @@ export const selectGameToPlay = (chosenGame: AvaliableGames) => {
 }
 
 export const makeMove = (move: string) => {
+  // Do not use getUsername() instead use socket[id] on server
   socket.emit('make-move', {
     player: getUsername(),
     roomId: currentRoom.value,

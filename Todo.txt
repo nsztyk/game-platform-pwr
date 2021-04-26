@@ -1,0 +1,3 @@
+Uzytkownik nie moze kliknac 2 razy na to samo pole w kolko i krzyzyk
+blokowanie wprowadzania jesli nie tura uzytkownika
+zmiana sposoby prowadzenia gry na klasy ?

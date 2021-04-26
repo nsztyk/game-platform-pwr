@@ -10,6 +10,7 @@
     </div>
   </div>
   <div class="text-xl" v-if="getWinner">WINNER: {{getWinner}}</div>
+  {{getGameState}}
 </template>
 
 <script lang="ts">
