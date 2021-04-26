@@ -12,6 +12,8 @@ const users = {}
 
 let rooms = []
 
+const roomDetails = {}
+
 const addUserToRoom = (roomId, nickname) => {
   rooms = rooms.map(room => {
     if (room.id == roomId)
@@ -50,32 +52,6 @@ const getRoomWithId = (roomId) => {
   return rooms.filter(room => room.id == roomId)[0]
 }
 
-const publicRoomsInfo = () => {
-  return rooms.map(room => {
-    return {
-      name: room.name,
-      id: room.id,
-      users: room.users,
-      game: room.game,
-      admin: room.admin
-    }
-  })
-}
-
-const publicRoomsWithPrivateRoomInfo = (roomId) => {
-  return rooms.map(room => {
-    if (room.id === roomId)
-      return room
-    return {
-      name: room.name,
-      id: room.id,
-      users: room.users,
-      game: room.game,
-      admin: room.admin
-    }
-  })
-}
-
 
 server.listen(3000)
 
@@ -89,14 +65,14 @@ io.on('connection', socket => {
     }
     deleteEmptyRooms()
     delete users[socket.id]
-    io.emit('rooms', publicRoomsInfo())
+    io.emit('rooms', rooms)
     io.emit('connected-players', getPlayers())
   }
 
-  socket.emit('rooms', publicRoomsInfo())
+  socket.emit('rooms', rooms)
 
   socket.on('get-rooms', () => {
-    socket.emit('rooms', publicRoomsInfo())
+    socket.emit('rooms', rooms)
   })
 
   socket.on('register-user-on-server', nickname => {
@@ -108,7 +84,10 @@ io.on('connection', socket => {
     socket.join(id)
     addUserToRoom(id, users[socket.id])
     socket.to(id).emit('user-connected', users[socket.id])
-    io.emit('rooms', publicRoomsInfo())
+    const room = getRoomWithId(id)
+    if (room.game)
+      io.to(room.id).emit('initalize-game-client', { game: room.game, gameDetails: roomDetails[room.id] })
+    io.emit('rooms', rooms)
   })
 
   socket.on('new-room', () => {
@@ -119,11 +98,9 @@ io.on('connection', socket => {
       users: [],
       admin: users[socket.id],
       game: undefined,
-      playersMoveOrder: [],
-      gameState: {}
     })
     socket.emit('join-created-room', lastId)
-    io.emit('rooms', publicRoomsInfo())
+    io.emit('rooms', rooms)
   })
 
   socket.on('send-chat-message', ({ message, id }) => {
@@ -154,35 +131,36 @@ io.on('connection', socket => {
 
   const initGameInRoom = (room) => {
     const shuffledUsersList = room.users.slice().sort(() => Math.random() - 0.5)
-    room.playersMoveOrder = shuffledUsersList
+    roomDetails[room.id] = { playersMoveOrder: [], gameState: [], winner: "" }
+    roomDetails[room.id].playersMoveOrder = shuffledUsersList
     switch (room.game) {
       case 'Tictactoe':
-        room.gameState = tictactoeStartingState()
+        roomDetails[room.id].gameState = tictactoeStartingState()
         break;
       default:
         break;
     }
-    io.emit('rooms', publicRoomsInfo())
-    io.to(room.id).emit('rooms', publicRoomsWithPrivateRoomInfo(room.id))
-    io.to(room.id).emit('initalize-game-client', { game: room.game })
+    io.to(room.id).emit('rooms', rooms)
+    io.to(room.id).emit('initalize-game-client', { game: room.game, gameDetails: roomDetails[room.id] })
   }
 
-  socket.on('make-move', ({roomId, move }) => {
+  socket.on('make-move', ({ roomId, move }) => {
     const room = getRoomWithId(roomId)
-    if (room.playersMoveOrder[0] === users[socket.id]) {
+    const game = roomDetails[roomId]
+    if (game.playersMoveOrder[0] === users[socket.id]) {
       switch (room.game) {
         case 'Tictactoe':
-          const { boardAfterMove, whoWon } = tictactoeMakeMove(move, room.gameState.board)
-          room.gameState.board = boardAfterMove
-          room.gameState.winner = whoWon
+          const { boardAfterMove, whoWon } = tictactoeMakeMove(move, game.gameState)
+          game.gameState = boardAfterMove
+          game.winner = whoWon
           break;
         default:
           break;
-      }      
-      const [first, ...rest] = room.playersMoveOrder
-      room.playersMoveOrder = [...rest, first]
+      }
+      const [first, ...rest] = game.playersMoveOrder
+      game.playersMoveOrder = [...rest, first]
     }
-    io.to(room.id).emit('rooms', publicRoomsWithPrivateRoomInfo(room.id))
+    io.to(room.id).emit('curr-game-info', game)
   })
 
 

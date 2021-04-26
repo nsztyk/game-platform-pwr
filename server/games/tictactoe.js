@@ -8,12 +8,9 @@ ___________
 
 
 const tictactoeStartingState = () => {
-  return {
-    board:
-      ['', '', '',
+  return ['', '', '',
         '', '', '',
         '', '', '']
-  }
 }
 
 const turnCounter = (board) => {

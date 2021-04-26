@@ -23,8 +23,12 @@
       </ul>
     </div>
     <component :is="getGameComponent" />
+    <p>roomDetail</p>
     {{roomDetails}}
+    <p>IsMuTurn</p>
     {{isMyTurn}}
+    <p>CurrgameDetails</p>
+    {{getCurrGameDetails}}
   </div>
 </template>
 
@@ -38,7 +42,8 @@ import {
   getMessages,
   exitRoom,
   isAdmin,
-  roomDetails
+  roomDetails,
+  getCurrGameDetails
 } from "../middleware/SocketConnection";
 import { getGames, chooseGame, getGameComponent, exitGame, isMyTurn} from "../middleware/GamesService";
 import Tictactoe from "../games/Tictactoe.vue"
@@ -62,7 +67,8 @@ export default defineComponent({
       chooseGame,
       getGameComponent,
       roomDetails,
-      isMyTurn
+      isMyTurn,
+      getCurrGameDetails
     };
   },
   beforeRouteLeave() {

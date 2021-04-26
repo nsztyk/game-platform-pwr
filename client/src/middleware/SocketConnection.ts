@@ -4,22 +4,27 @@ import io, { Socket } from 'socket.io-client'
 import { ref, computed } from 'vue';
 import { AvaliableGames, initGame } from "./GamesService"
 
-interface RoomsInterface {
+interface RoomInterface {
   name: string;
   users: string[];
   id: number;
   admin: string;
   game: AvaliableGames;
+}
+
+interface CurrGameDetails {
   playersMoveOrder: string[];
-  gameState: {
-    board: [];
-    winner?: string;
-  };
+  gameState: string[];
+  winner?: string;
 }
 
 
 let socket = null as unknown as Socket;
-const rooms = ref<RoomsInterface[]>([])
+const rooms = ref<RoomInterface[]>([])
+const currGameDetails = ref<CurrGameDetails>({
+  playersMoveOrder: [],
+  gameState: []
+})
 const messages = ref<string[]>([])
 const players = ref<string[]>([])
 const currentRoom = ref<number>()
@@ -34,7 +39,6 @@ const addOnEvents = () => {
   });
 
   socket.on("chat-message", ({ message, nickname }) => {
-    console.log("XD");
     messages.value.push(`${nickname}: ${message}`);
   });
 
@@ -50,8 +54,12 @@ const addOnEvents = () => {
     players.value = playersInfo
   })
 
-  socket.on("initalize-game-client", ({ game }) => {
+  socket.on("initalize-game-client", ({ game, gameDetails }) => {
     initGame(game)
+    currGameDetails.value = gameDetails
+  })
+  socket.on("curr-game-info", (gameDetails) => {
+    currGameDetails.value = gameDetails
   })
 
 }
@@ -66,6 +74,10 @@ export const connectToServer = () => {
 export const exitRoom = () => {
   messages.value = []
   currentRoom.value = NaN
+  currGameDetails.value = {
+    playersMoveOrder: [],
+    gameState: []
+  }
   if (socket)
     socket.disconnect();
 }
@@ -95,10 +107,12 @@ export const isAdmin = computed(() => {
   return false
 })
 
+
 export const roomDetails = computed(() => rooms.value.filter(potentialRoom => potentialRoom.id == currentRoom.value)[0])
 export const getRooms = computed(() => rooms.value);
 export const getMessages = computed(() => messages.value)
 export const getPlayers = computed(() => players.value)
+export const getCurrGameDetails = computed(() => currGameDetails.value)
 
 
 // Games section
