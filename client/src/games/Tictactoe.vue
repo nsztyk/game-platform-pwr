@@ -18,8 +18,12 @@ import { getGameState, move, getWinner} from "../middleware/GamesService";
 export default defineComponent({
   name: "Tictactoe",
   setup(){
+    const isLegalMove = (field: number) => {
+      return !getGameState.value[field]
+    }
     const makeMove = (field: number) => {
-      move(field.toString())
+      if (isLegalMove(field) && !getWinner.value)
+        move(field.toString())
     }
     return {
       getGameState,

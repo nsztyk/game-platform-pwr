@@ -131,6 +131,7 @@ io.on('connection', socket => {
 
   const initGameInRoom = (room) => {
     const shuffledUsersList = room.users.slice().sort(() => Math.random() - 0.5)
+  
     roomDetails[room.id] = { playersMoveOrder: [], gameState: [], winner: "" }
     roomDetails[room.id].playersMoveOrder = shuffledUsersList
     switch (room.game) {
@@ -140,6 +141,7 @@ io.on('connection', socket => {
       default:
         break;
     }
+
     io.to(room.id).emit('rooms', rooms)
     io.to(room.id).emit('initalize-game-client', { game: room.game, gameDetails: roomDetails[room.id] })
   }

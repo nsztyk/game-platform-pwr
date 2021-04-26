@@ -19,11 +19,12 @@ const turnCounter = (board) => {
 
 const makeMove = (field, board) => {
   const currentTurn = turnCounter(board)
-  board[field] = currentTurn % 2 === 0 ? 'x' : 'o'
+  if (!board[field])
+    board[field] = currentTurn % 2 === 0 ? 'x' : 'o'
   const whoWon = gameEnded(board, currentTurn)
   return {
     boardAfterMove: board,
-    whoWon
+    whoWon,
   }
 }
 
