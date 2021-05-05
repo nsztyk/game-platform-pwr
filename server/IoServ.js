@@ -119,7 +119,7 @@ io.on('connection', socket => {
   */
 
   const { tictactoeStartingState, tictactoeMakeMove, tictactoeMaxPlayers, tictactoeMinPlayers } = require('./games/tictactoe');
-  const { rpslsMaxPlayers, rpslsMinPlayers} = require('./games/rpsls');
+  const { rpslsMaxPlayers, rpslsMinPlayers } = require('./games/rpsls');
 
 
   socket.on('chosen-game', ({ selectedGame, id }) => {
@@ -155,7 +155,11 @@ io.on('connection', socket => {
   socket.on('add-player-to-game', ({ roomId, position }) => {
     const game = roomDetails[roomId]
     if (!game.players[position]) {
-      game.players = game.players.filter(player => player != users[socket.id])
+      game.players = game.players.map(player => {
+        if (player != users[socket.id])
+          return player
+        return null
+      })
       game.players[position] = users[socket.id]
       io.to(roomId).emit('curr-game-info', game)
     } else if (game.players[position] == users[socket.id]) {
