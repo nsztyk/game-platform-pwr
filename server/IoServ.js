@@ -83,7 +83,7 @@ io.on('connection', socket => {
     socket.to(id).emit('user-connected', users[socket.id])
     addUserToRoom(id, users[socket.id])
     const room = getRoomWithId(id)
-    if (room.game){
+    if (room.game) {
       socket.emit('initalize-game-client', { game: room.game, gameDetails: roomDetails[room.id] })
       socket.emit('curr-game-info', roomDetails[room.id])
     }
@@ -119,6 +119,7 @@ io.on('connection', socket => {
   */
 
   const { tictactoeStartingState, tictactoeMakeMove, tictactoeMaxPlayers, tictactoeMinPlayers } = require('./games/tictactoe');
+  const { rpslsMaxPlayers, rpslsMinPlayers} = require('./games/rpsls');
 
 
   socket.on('chosen-game', ({ selectedGame, id }) => {
@@ -131,37 +132,39 @@ io.on('connection', socket => {
   })
 
   const initGameInRoom = (room) => {
-    roomDetails[room.id] = { playersMoveOrder: [], gameState: [], winner: "", minPlayers: null, maxPlayers: null, gameStarted: false, players: []}
-    // let shuffledUsersList = []
+    roomDetails[room.id] = { playersMoveOrder: [], gameState: [], winner: "", minPlayers: null, maxPlayers: null, gameStarted: false, players: [] }
     switch (room.game) {
       case 'Tictactoe':
         roomDetails[room.id].gameState = tictactoeStartingState()
         roomDetails[room.id].maxPlayers = tictactoeMaxPlayers
         roomDetails[room.id].minPlayers = tictactoeMinPlayers
         roomDetails[room.id].players = new Array(tictactoeMaxPlayers).fill(null)
-        // shuffledUsersList = room.users.slice(0, tictactoeMaxPlayers).sort(() => Math.random() - 0.5)
+        break;
+      case 'Rpsls':
+        roomDetails[room.id].maxPlayers = rpslsMaxPlayers
+        roomDetails[room.id].minPlayers = rpslsMinPlayers
+        roomDetails[room.id].players = new Array(rpslsMaxPlayers).fill(null)
         break;
       default:
         break;
     }
-    // roomDetails[room.id].playersMoveOrder = shuffledUsersList
     io.to(room.id).emit('rooms', rooms)
     io.to(room.id).emit('initalize-game-client', { game: room.game, gameDetails: roomDetails[room.id] })
   }
 
-  socket.on('add-player-to-game', ({roomId, position}) => {
+  socket.on('add-player-to-game', ({ roomId, position }) => {
     const game = roomDetails[roomId]
-    if (!game.players[position]){
+    if (!game.players[position]) {
       game.players = game.players.filter(player => player != users[socket.id])
       game.players[position] = users[socket.id]
       io.to(roomId).emit('curr-game-info', game)
-    } else if (game.players[position] == users[socket.id]){
+    } else if (game.players[position] == users[socket.id]) {
       game.players[position] = null
       io.to(roomId).emit('curr-game-info', game)
     }
   })
 
-  socket.on('start-game-in-room', ({roomId}) => {
+  socket.on('start-game-in-room', ({ roomId }) => {
     const game = roomDetails[roomId]
     let shuffledUsersList = []
     console.log(game.players);
