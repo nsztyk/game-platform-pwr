@@ -42,12 +42,13 @@ export const isMyTurn = computed(() => {
   return false
 })
 export const canGameBeStarted = computed(() => {
+  let playerCount = 0
   for (const player of getCurrGameDetails.value.players)
-    if (!player)
-      return false
+    if (player)
+      playerCount++
   return (
-    getCurrGameDetails.value.players.length >= getCurrGameDetails.value.minPlayers
-    && getCurrGameDetails.value.players.length <= getCurrGameDetails.value.maxPlayers)
+    playerCount >= getCurrGameDetails.value.minPlayers
+    && playerCount <= getCurrGameDetails.value.maxPlayers)
 })
 
 
