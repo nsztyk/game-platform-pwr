@@ -27,23 +27,14 @@ const deleteEmptyRooms = () => {
 }
 
 const deleteUserFromRooms = (roomsId, nickname) => {
-
   rooms = rooms.map(room => {
     if (roomsId.includes(room.id)) {
       room.users = room.users.filter(user => user != nickname)
-      if (room.playersMoveOrder)
-        room.playersMoveOrder = room.playersMoveOrder.filter(user => user != nickname)
       // pass admin
       room.admin = room.users[0]
     }
     return room
   })
-  for (roomId of roomsId){
-    if (typeof(roomId) == 'number'){
-      roomDetails[roomId].playersMoveOrder = roomDetails[roomId].playersMoveOrder.filter(user => user != nickname)
-      io.to(roomId).emit('curr-game-info', roomDetails[roomId])
-    }
-  }
 }
 
 const isPlayerAdminInRoom = (nickname, roomId) => {
@@ -91,6 +82,11 @@ io.on('connection', socket => {
     socket.join(id)
     socket.to(id).emit('user-connected', users[socket.id])
     addUserToRoom(id, users[socket.id])
+    const room = getRoomWithId(id)
+    if (room.game){
+      socket.emit('initalize-game-client', { game: room.game, gameDetails: roomDetails[room.id] })
+      socket.emit('curr-game-info', roomDetails[room.id])
+    }
     io.emit('rooms', rooms)
   })
 

@@ -24,8 +24,8 @@
         <p class="text-lg">Admin is choosing game to play</p>
       </div>
       <p class="text-lg" v-if="getCurrGameDetails.gameStarted">
-          GAME STARTED
-        </p>
+        GAME STARTED
+      </p>
       <component :is="getGameComponent" />
     </div>
     <div class="bg-gray-200 w-full p-5">
