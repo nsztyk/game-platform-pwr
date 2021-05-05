@@ -4,11 +4,12 @@ import { getUsername } from './TokenService'
 
 export enum AvaliableGames {
   'tictactoe' = 'Tictactoe',
+  'rpsls' = 'Rpsls'
 }
 
 
 
-const gamesToPlay = ref<AvaliableGames[]>([AvaliableGames.tictactoe])
+const gamesToPlay = ref<AvaliableGames[]>([AvaliableGames.tictactoe, AvaliableGames.rpsls])
 export const gameComponent = ref<AvaliableGames>()
 
 
