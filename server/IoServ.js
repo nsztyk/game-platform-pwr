@@ -170,9 +170,12 @@ io.on('connection', socket => {
 
   socket.on('start-game-in-room', ({ roomId }) => {
     const game = roomDetails[roomId]
-    let shuffledUsersList = []
-    console.log(game.players);
-    shuffledUsersList = game.players.sort(() => Math.random() - 0.5)
+    let shuffledUsersList = game.players
+
+    shuffledUsersList = game.players
+    .slice()
+    .sort(() => Math.random() - 0.5)
+    .filter(player => player)
     roomDetails[room.id].playersMoveOrder = shuffledUsersList
     roomDetails[room.id].gameStarted = true
     io.to(roomId).emit('curr-game-info', game)
