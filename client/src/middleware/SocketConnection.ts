@@ -15,7 +15,11 @@ interface RoomInterface {
 interface CurrGameDetails {
   playersMoveOrder: string[];
   gameState: string[];
+  maxPlayers: number;
+  minPlayers: number;
+  players: string[];
   winner?: string;
+  notInitiated?: boolean;
 }
 
 
@@ -23,7 +27,11 @@ let socket = null as unknown as Socket;
 const rooms = ref<RoomInterface[]>([])
 const currGameDetails = ref<CurrGameDetails>({
   playersMoveOrder: [],
-  gameState: []
+  gameState: [],
+  minPlayers: NaN,
+  maxPlayers: NaN,
+  notInitiated: true,
+  players: []
 })
 const messages = ref<string[]>([])
 const players = ref<string[]>([])
@@ -76,7 +84,11 @@ export const exitRoom = () => {
   currentRoom.value = NaN
   currGameDetails.value = {
     playersMoveOrder: [],
-    gameState: []
+    gameState: [],
+    minPlayers: NaN,
+    maxPlayers: NaN,
+    notInitiated: true,
+    players: []
   }
   if (socket)
     socket.disconnect();
@@ -125,11 +137,24 @@ export const selectGameToPlay = (chosenGame: AvaliableGames) => {
   })
 }
 
+export const addPlayerToGame = (position: number) => {
+  socket.emit('add-player-to-game', {
+    roomId: currentRoom.value,
+    position,
+  })
+}
+
 export const makeMove = (move: string) => {
   // Do not use getUsername() instead use socket[id] on server
   socket.emit('make-move', {
     player: getUsername(),
     roomId: currentRoom.value,
     move
+  })
+}
+
+export const startGame = () => {
+  socket.emit('start-game-in-room', {
+    roomId: currentRoom.value
   })
 }

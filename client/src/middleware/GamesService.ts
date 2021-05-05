@@ -29,6 +29,10 @@ export const exitGame = () => {
   gameComponent.value = undefined
 }
 
+export const getPlayerInPosition = (pos: number) => {
+  return getCurrGameDetails.value.players[pos]
+}
+
 export const isMyTurn = computed(() => {
   const roomInfo = getCurrGameDetails
   if (roomInfo.value && roomInfo.value.playersMoveOrder && roomInfo.value.playersMoveOrder.length) {
@@ -36,9 +40,20 @@ export const isMyTurn = computed(() => {
   }
   return false
 })
+export const canGameBeStarted = computed(() => {
+  for (const player of getCurrGameDetails.value.players)
+    if (!player)
+      return false
+  return (
+    getCurrGameDetails.value.players.length >= getCurrGameDetails.value.minPlayers
+    && getCurrGameDetails.value.players.length <= getCurrGameDetails.value.maxPlayers)
+})
+
 
 export const getGames = computed(() => gamesToPlay.value)
 export const getGameComponent = computed(() => gameComponent.value)
 export const getGameState = computed(() => getCurrGameDetails.value.gameState)
 export const getWinner = computed(() => getCurrGameDetails.value.winner)
+export const isInitiated = computed(() => !getCurrGameDetails.value.notInitiated)
+
 

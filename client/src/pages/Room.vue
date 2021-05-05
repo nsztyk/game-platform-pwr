@@ -1,35 +1,67 @@
 <template>
-  <div
-    class="flex flex-col mx-auto w-7/12 sm:w-8/12 md:w-7/12 lg:w-5/12 xl:w-4/12"
-  >
-    <button @click="logOut">
-      log out
-    </button>
-    <div v-if="isAdmin">
-      <p class="text-lg">You are admin, choose game to play</p>
-      <ul>
-        <li v-for="(game, index) in getGames" :key="index" @click="chooseGame(game)" class="cursor-pointer">
-          {{ game }}
-        </li>
-      </ul>
+  <button @click="logOut">
+    log out
+  </button>
+  <div class="flex flex-row mx-auto w-6/12">
+    <div class="bg-gray-600 w-full p-5">
+      <div v-if="isAdmin && !getCurrGameDetails.gameStarted">
+        <p class="text-lg">You are admin, choose game to play</p>
+        <ul>
+          <li
+            v-for="(game, index) in getGames"
+            :key="index"
+            @click="chooseGame(game)"
+            class="cursor-pointer"
+          >
+            {{ game }}
+          </li>
+        </ul>
+        <div v-if="canGameBeStarted" @click="startGame">
+          Start the game
+        </div>
+      </div>
+      <div v-else-if="!getCurrGameDetails.gameStarted">
+        <p class="text-lg">Admin is choosing game to play</p>
+      </div>
+      <p class="text-lg" v-if="getCurrGameDetails.gameStarted">
+          GAME STARTED
+        </p>
+      <component :is="getGameComponent" />
     </div>
-    <input type="text" placeholder="message" v-model="messageText" />
-    <button @click="sendMessageToOthers">Send</button>
-    <div>
-      <ul>
-        <li v-for="(message, index) in getMessages" :key="index">
-          {{ message }}
-        </li>
-      </ul>
+    <div class="bg-gray-200 w-full p-5">
+      <div v-if="isInitiated">
+        <div class="grid grid-cols-2">
+          <div
+            v-for="(player, index) in getCurrGameDetails.players"
+            :key="index"
+            class="border-2 border-black m-1 ml-0 px-2 py-1"
+            @click="addPlayerToGame(index)"
+          >
+            {{ index }}
+            {{ getPlayerInPosition(index) }}
+          </div>
+        </div>
+      </div>
+      <div>
+        <input type="text" placeholder="message" v-model="messageText" />
+        <button @click="sendMessageToOthers">Send</button>
+        <div>
+          <ul>
+            <li v-for="(message, index) in getMessages" :key="index">
+              {{ message }}
+            </li>
+          </ul>
+        </div>
+      </div>
     </div>
-    <component :is="getGameComponent" />
-    <p>roomDetail</p>
-    {{roomDetails}}
-    <p>IsMuTurn</p>
-    {{isMyTurn}}
-    <p>CurrgameDetails</p>
-    {{getCurrGameDetails}}
   </div>
+  DEV INFO
+  <p>roomDetail</p>
+  {{ roomDetails }}
+  <p>IsMyTurn</p>
+  {{ isMyTurn }}
+  <p>CurrgameDetails</p>
+  {{ getCurrGameDetails }}
 </template>
 
 <script lang="ts">
@@ -43,21 +75,32 @@ import {
   exitRoom,
   isAdmin,
   roomDetails,
-  getCurrGameDetails
+  getCurrGameDetails,
+  addPlayerToGame,
+  startGame,
 } from "../middleware/SocketConnection";
-import { getGames, chooseGame, getGameComponent, exitGame, isMyTurn} from "../middleware/GamesService";
-import Tictactoe from "../games/Tictactoe.vue"
+import {
+  getGames,
+  chooseGame,
+  getGameComponent,
+  exitGame,
+  isMyTurn,
+  isInitiated,
+  getPlayerInPosition,
+  canGameBeStarted,
+} from "../middleware/GamesService";
+import Tictactoe from "../games/Tictactoe.vue";
 
 export default defineComponent({
   name: "ChooseGame",
   data() {
     return {
       messageText: "",
-      destinationId: Number(this.$route.params.id)
+      destinationId: Number(this.$route.params.id),
     };
   },
   components: {
-    Tictactoe
+    Tictactoe,
   },
   setup() {
     return {
@@ -68,7 +111,12 @@ export default defineComponent({
       getGameComponent,
       roomDetails,
       isMyTurn,
-      getCurrGameDetails
+      getCurrGameDetails,
+      isInitiated,
+      addPlayerToGame,
+      getPlayerInPosition,
+      canGameBeStarted,
+      startGame,
     };
   },
   beforeRouteLeave() {

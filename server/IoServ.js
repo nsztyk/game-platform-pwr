@@ -27,6 +27,7 @@ const deleteEmptyRooms = () => {
 }
 
 const deleteUserFromRooms = (roomsId, nickname) => {
+
   rooms = rooms.map(room => {
     if (roomsId.includes(room.id)) {
       room.users = room.users.filter(user => user != nickname)
@@ -37,6 +38,12 @@ const deleteUserFromRooms = (roomsId, nickname) => {
     }
     return room
   })
+  for (roomId of roomsId){
+    if (typeof(roomId) == 'number'){
+      roomDetails[roomId].playersMoveOrder = roomDetails[roomId].playersMoveOrder.filter(user => user != nickname)
+      io.to(roomId).emit('curr-game-info', roomDetails[roomId])
+    }
+  }
 }
 
 const isPlayerAdminInRoom = (nickname, roomId) => {
@@ -82,11 +89,8 @@ io.on('connection', socket => {
 
   socket.on('join-room', (id) => {
     socket.join(id)
-    addUserToRoom(id, users[socket.id])
     socket.to(id).emit('user-connected', users[socket.id])
-    const room = getRoomWithId(id)
-    if (room.game)
-      io.to(room.id).emit('initalize-game-client', { game: room.game, gameDetails: roomDetails[room.id] })
+    addUserToRoom(id, users[socket.id])
     io.emit('rooms', rooms)
   })
 
@@ -96,6 +100,7 @@ io.on('connection', socket => {
       name: `room${lastId}`,
       id: lastId,
       users: [],
+      players: [],
       admin: users[socket.id],
       game: undefined,
     })
@@ -117,7 +122,7 @@ io.on('connection', socket => {
   
   */
 
-  const { tictactoeStartingState, tictactoeMakeMove, tictactoeMaxPlayers } = require('./games/tictactoe');
+  const { tictactoeStartingState, tictactoeMakeMove, tictactoeMaxPlayers, tictactoeMinPlayers } = require('./games/tictactoe');
 
 
   socket.on('chosen-game', ({ selectedGame, id }) => {
@@ -130,20 +135,45 @@ io.on('connection', socket => {
   })
 
   const initGameInRoom = (room) => {
-    roomDetails[room.id] = { playersMoveOrder: [], gameState: [], winner: "" }
-    let shuffledUsersList = []
+    roomDetails[room.id] = { playersMoveOrder: [], gameState: [], winner: "", minPlayers: null, maxPlayers: null, gameStarted: false, players: []}
+    // let shuffledUsersList = []
     switch (room.game) {
       case 'Tictactoe':
         roomDetails[room.id].gameState = tictactoeStartingState()
-        shuffledUsersList = room.users.slice(0, tictactoeMaxPlayers).sort(() => Math.random() - 0.5)
+        roomDetails[room.id].maxPlayers = tictactoeMaxPlayers
+        roomDetails[room.id].minPlayers = tictactoeMinPlayers
+        roomDetails[room.id].players = new Array(tictactoeMaxPlayers).fill(null)
+        // shuffledUsersList = room.users.slice(0, tictactoeMaxPlayers).sort(() => Math.random() - 0.5)
         break;
       default:
         break;
     }
-    roomDetails[room.id].playersMoveOrder = shuffledUsersList
+    // roomDetails[room.id].playersMoveOrder = shuffledUsersList
     io.to(room.id).emit('rooms', rooms)
     io.to(room.id).emit('initalize-game-client', { game: room.game, gameDetails: roomDetails[room.id] })
   }
+
+  socket.on('add-player-to-game', ({roomId, position}) => {
+    const game = roomDetails[roomId]
+    if (!game.players[position]){
+      game.players = game.players.filter(player => player != users[socket.id])
+      game.players[position] = users[socket.id]
+      io.to(roomId).emit('curr-game-info', game)
+    } else if (game.players[position] == users[socket.id]){
+      game.players[position] = null
+      io.to(roomId).emit('curr-game-info', game)
+    }
+  })
+
+  socket.on('start-game-in-room', ({roomId}) => {
+    const game = roomDetails[roomId]
+    let shuffledUsersList = []
+    console.log(game.players);
+    shuffledUsersList = game.players.sort(() => Math.random() - 0.5)
+    roomDetails[room.id].playersMoveOrder = shuffledUsersList
+    roomDetails[room.id].gameStarted = true
+    io.to(roomId).emit('curr-game-info', game)
+  })
 
   socket.on('make-move', ({ roomId, move }) => {
     const room = getRoomWithId(roomId)

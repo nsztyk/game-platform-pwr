@@ -53,5 +53,6 @@ const gameEnded = (board, currentTurn) => {
 module.exports = {
   tictactoeStartingState,
   tictactoeMakeMove: makeMove,
-  tictactoeMaxPlayers,
+  tictactoeMaxPlayers: 2,
+  tictactoeMinPlayers: 2
 }
