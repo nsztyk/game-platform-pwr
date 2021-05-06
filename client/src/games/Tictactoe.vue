@@ -13,7 +13,7 @@
 
 <script lang="ts">
 import { defineComponent } from "vue";
-import { getGameState, move, getWinner} from "../middleware/GamesService";
+import { getGameState, move, getResult} from "../middleware/GamesService";
 export default defineComponent({
   name: "Tictactoe",
   setup(){
@@ -21,13 +21,13 @@ export default defineComponent({
       return !getGameState.value[field]
     }
     const makeMove = (field: number) => {
-      if (isLegalMove(field) && !getWinner.value)
+      if (isLegalMove(field) && !getResult.value)
         move(field.toString())
     }
     return {
       getGameState,
       makeMove,
-      getWinner,
+      getResult,
     }
   }
 });

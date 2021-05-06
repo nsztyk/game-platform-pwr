@@ -26,7 +26,7 @@
       <p class="text-lg" v-if="getCurrGameDetails.gameStarted">
         GAME STARTED
       </p>
-      <div class="text-xl" v-if="getWinner">WINNER: {{getWinner}}</div>
+      <div class="text-xl" v-if="getResult">Result: {{getCurrGameDetails.result}}</div>
       <component :is="getGameComponent" />
     </div>
     <div class="bg-gray-200 w-full p-5">
@@ -89,7 +89,7 @@ import {
   isInitiated,
   getPlayerInPosition,
   canGameBeStarted,
-  getWinner
+  getResult
 } from "../middleware/GamesService";
 import Tictactoe from "../games/Tictactoe.vue";
 import Rpsls from "../games/Rpsls.vue"
@@ -121,7 +121,7 @@ export default defineComponent({
       getPlayerInPosition,
       canGameBeStarted,
       startGame,
-      getWinner,
+      getResult,
     };
   },
   beforeRouteLeave() {

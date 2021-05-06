@@ -134,7 +134,7 @@ io.on('connection', socket => {
   })
 
   const initGameInRoom = (room) => {
-    roomDetails[room.id] = { playersMoveOrder: [], gameState: [], winner: "", minPlayers: null, maxPlayers: null, gameStarted: false, players: [] }
+    roomDetails[room.id] = { playersMoveOrder: [], gameState: [], result: {}, minPlayers: null, maxPlayers: null, gameStarted: false, players: [] }
     switch (room.game) {
       case 'Tictactoe':
         roomDetails[room.id].gameState = tictactoeStartingState()
@@ -184,6 +184,9 @@ io.on('connection', socket => {
       roomDetails[room.id].gameState = rpslsStartingState(shuffledUsersList.length);
       gameSecret[roomId] = []
     }
+    else if (room.game == 'Tictactoe'){
+      gameSecret[roomId] = [shuffledUsersList[0], shuffledUsersList[1]]
+    }
     io.to(roomId).emit('curr-game-info', game)
   })
 
@@ -193,14 +196,15 @@ io.on('connection', socket => {
     if (game.playersMoveOrder[0] === users[socket.id]) {
       switch (room.game) {
         case 'Tictactoe':
-          const { boardAfterMove, whoWon } = tictactoeMakeMove(move, game.gameState)
+          const { boardAfterMove, result } = tictactoeMakeMove(move, game.gameState, gameSecret[roomId])
           game.gameState = boardAfterMove
-          game.winner = whoWon
+          game.result = result
+
           break;
         case 'Rpsls':
           game.gameState = rpslsMakeMove(gameSecret[roomId], users[socket.id], move, game.gameState)
           if (!game.gameState.includes(false)){
-            game.winner = rpslsGetWinner(gameSecret[roomId])
+            game.result = rpslsGetWinner(gameSecret[roomId])
           }
           break;
         default:

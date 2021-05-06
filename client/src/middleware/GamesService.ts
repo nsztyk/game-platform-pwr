@@ -55,7 +55,7 @@ export const canGameBeStarted = computed(() => {
 export const getGames = computed(() => gamesToPlay.value)
 export const getGameComponent = computed(() => gameComponent.value)
 export const getGameState = computed(() => getCurrGameDetails.value.gameState)
-export const getWinner = computed(() => getCurrGameDetails.value.winner)
+export const getResult = computed(() => getCurrGameDetails.value.result && Object.keys(getCurrGameDetails.value.result).length > 0)
 export const isInitiated = computed(() => !getCurrGameDetails.value.notInitiated)
 
 

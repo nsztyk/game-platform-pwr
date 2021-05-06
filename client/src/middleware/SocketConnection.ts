@@ -18,7 +18,7 @@ interface CurrGameDetails {
   maxPlayers: number;
   minPlayers: number;
   players: string[];
-  winner?: string;
+  result?: object;
   notInitiated?: boolean;
 }
 

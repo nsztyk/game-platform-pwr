@@ -4,7 +4,7 @@
       {{ option }}
     </div>
   </div>
-  <div class="text-xl" v-if="getWinner">WINNER: {{ getWinner }}</div>
+  <div class="text-xl" v-if="getResult">WINNER: {{ getResult }}</div>
 </template>
 
 <script lang="ts">
