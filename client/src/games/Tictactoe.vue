@@ -9,7 +9,6 @@
       {{ boardPiece }}
     </div>
   </div>
-  <div class="text-xl" v-if="getWinner">WINNER: {{getWinner}}</div>
 </template>
 
 <script lang="ts">
