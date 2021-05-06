@@ -121,7 +121,7 @@ io.on('connection', socket => {
   */
 
   const { tictactoeStartingState, tictactoeMakeMove, tictactoeMaxPlayers, tictactoeMinPlayers } = require('./games/tictactoe');
-  const { rpslsMaxPlayers, rpslsMinPlayers, rpslsStartingState, rpslsMakeMove, rpslsGetWinner} = require('./games/rpsls');
+  const { rpslsMaxPlayers, rpslsMinPlayers, rpslsStartingState, rpslsMakeMove, rpslsGetWinner } = require('./games/rpsls');
 
 
   socket.on('chosen-game', ({ selectedGame, id }) => {
@@ -184,7 +184,7 @@ io.on('connection', socket => {
       roomDetails[room.id].gameState = rpslsStartingState(shuffledUsersList.length);
       gameSecret[roomId] = []
     }
-    else if (room.game == 'Tictactoe'){
+    else if (room.game == 'Tictactoe') {
       gameSecret[roomId] = [shuffledUsersList[0], shuffledUsersList[1]]
     }
     io.to(roomId).emit('curr-game-info', game)
@@ -203,7 +203,7 @@ io.on('connection', socket => {
           break;
         case 'Rpsls':
           game.gameState = rpslsMakeMove(gameSecret[roomId], users[socket.id], move, game.gameState)
-          if (!game.gameState.includes(false)){
+          if (!game.gameState.includes(false)) {
             game.result = rpslsGetWinner(gameSecret[roomId])
           }
           break;
@@ -214,6 +214,15 @@ io.on('connection', socket => {
       game.playersMoveOrder = [...rest, first]
     }
     io.to(room.id).emit('curr-game-info', game)
+  })
+
+  socket.on('end-game', ({ roomId }) => {
+    const room = getRoomWithId(roomId)
+    room.game = undefined
+    roomDetails[roomId] = { playersMoveOrder: [], gameState: [], result: {}, minPlayers: null, maxPlayers: null, gameStarted: false, players: [] }
+    delete gameSecret[roomId]
+    io.to(roomId).emit('rooms', rooms)
+    io.to(roomId).emit('curr-game-info', roomDetails[roomId])
   })
 
 

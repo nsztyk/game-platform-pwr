@@ -27,6 +27,7 @@
         GAME STARTED
       </p>
       <div class="text-xl" v-if="getResult">Result: {{getCurrGameDetails.result}}</div>
+      <div class="text-xl" v-if="getResult && isAdmin" @click="endGame">Submit game</div>
       <component :is="getGameComponent" />
     </div>
     <div class="bg-gray-200 w-full p-5">
@@ -79,6 +80,7 @@ import {
   getCurrGameDetails,
   addPlayerToGame,
   startGame,
+  endGame,
 } from "../middleware/SocketConnection";
 import {
   getGames,
@@ -122,6 +124,7 @@ export default defineComponent({
       canGameBeStarted,
       startGame,
       getResult,
+      endGame,
     };
   },
   beforeRouteLeave() {

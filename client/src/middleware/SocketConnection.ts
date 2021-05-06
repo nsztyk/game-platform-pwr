@@ -158,3 +158,9 @@ export const startGame = () => {
     roomId: currentRoom.value
   })
 }
+
+export const endGame = () => {
+  socket.emit('end-game', {
+    roomId: currentRoom.value
+  })
+}
