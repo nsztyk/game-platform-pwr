@@ -47,6 +47,7 @@ export const canGameBeStarted = computed(() => {
     if (player)
       playerCount++
   return (
+    playerCount > 0 &&
     playerCount >= getCurrGameDetails.value.minPlayers
     && playerCount <= getCurrGameDetails.value.maxPlayers)
 })
