@@ -21,12 +21,53 @@ app.use('/api/users/', usersAPI)
 
 
 // Connecting to db
-mongoose.connect(env.mongoURI, { useNewUrlParser: true, useUnifiedTopology: true, useCreateIndex: true })
+mongoose.connect(env.mongoURI, { useNewUrlParser: true, useUnifiedTopology: true, useCreateIndex: true, useFindAndModify: false })
   .then(() => appListen())
   .catch((err) => console.log(err))
 
 const appListen = () => {
   server.listen(port, () => console.log(`Server running on port ${port}`))
+}
+
+
+const addGameResultToDb = (game, result) => {
+  let gameRes;
+  let howManyPlayers = result.length
+  for (res of result) {
+    switch (res.result) {
+      case 'Win':
+        gameRes = 'win'
+        break;
+      case 'Lose':
+        gameRes = 'lose'
+        break;
+      case 'Draw':
+        gameRes = 'draw'
+        break;
+    }
+
+    switch (game) {
+      case 'Tictactoe':
+        User.findOneAndUpdate({ username: res.player }, { $inc: { [`record.tictactoe.${gameRes}`] : 1 } }).exec()
+        break;
+      case 'Rpsls':
+        switch (howManyPlayers) {
+          case 2:
+            howManyPlayers = 'twoPlayers'
+            break;
+          case 3:
+            howManyPlayers = 'threePlayers'
+            break;
+          case 4:
+            howManyPlayers = 'fourPlayers'
+            break;
+          default:
+            break;
+        }
+        User.findOneAndUpdate({ username: res.player }, { $inc: { [`record.rpsls.${howManyPlayers}.${gameRes}`] : 1 } }).exec()
+        break;
+    }
+  }
 }
 
 const io = require("socket.io")(server, {
@@ -237,6 +278,9 @@ io.on('connection', socket => {
       const [first, ...rest] = game.playersMoveOrder
       game.playersMoveOrder = [...rest, first]
     }
+    if (Object.keys(game.result).length > 0)
+      addGameResultToDb(room.game, game.result)
+
     io.to(room.id).emit('curr-game-info', game)
   })
 
