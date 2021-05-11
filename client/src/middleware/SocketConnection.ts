@@ -74,7 +74,7 @@ const addOnEvents = () => {
 
 
 export const connectToServer = () => {
-  socket = io('http://localhost:3000')
+  socket = io('http://localhost:5000')
   socket.emit('register-user-on-server', getUsername())
   addOnEvents()
 }

@@ -5,8 +5,7 @@
   "description": "Web application in which 2 players can compete in various board games against each other",
   "main": "index.js",
   "scripts": {
-    "serve": "nodemon serverTutorial.js",
-    "wsServe": "nodemon IoServ.js"
+    "serve": "nodemon server.js"
   },
   "repository": {
     "type": "git",
