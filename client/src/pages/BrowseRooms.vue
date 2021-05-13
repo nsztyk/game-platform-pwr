@@ -5,6 +5,9 @@
     <button @click="logOut">
       log out
     </button>
+    <router-link :to="{ name: 'Statistics'}">
+      Check your stats
+    </router-link>
     <button @click="createNewRoom">Create new room</button>
     <h2>Created rooms</h2>
     <ul>

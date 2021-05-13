@@ -1,5 +1,5 @@
 
-import { secret } from "./AuthenticationService"
+import { secret, statistics } from "./AuthenticationService"
 import { decode } from 'jsonwebtoken'
 
 let token = ""
@@ -21,6 +21,16 @@ export const setToken = (incToken: string) => {
 
 export const removeToken = () => {
   token = ""
+}
+
+export const getStatistics = async () => {
+  try {
+    const res = await statistics(getToken())
+    return res.data.data
+  } catch (e) {
+    console.log(e);
+    return false
+  }
 }
 
 export const isTokenAuthorized = async () => {

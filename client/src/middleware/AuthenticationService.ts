@@ -24,3 +24,9 @@ export const secret = (token: string) => {
     token
   })
 }
+
+export const statistics = (token: string) => {
+  return axios.post(url + '/stats', {
+    token
+  })
+}

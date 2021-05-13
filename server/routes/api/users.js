@@ -15,9 +15,9 @@ router.post('/register', async (req, res) => {
     return res.json({ status: 'error', error: 'Invalid user parameters' })
 
   const { username, password: plainTextPassword, repeatedPassword } = user;
-  
+
   if (plainTextPassword !== repeatedPassword)
-    return res.json({status: 'error', error: 'Passwords do not match'})
+    return res.json({ status: 'error', error: 'Passwords do not match' })
 
   // TODO Regex for password and username
   const password = await bcrypt.hash(plainTextPassword, 10);
@@ -71,6 +71,18 @@ router.post('/secret', async (req, res) => {
   try {
     const user = jwt.verify(token, env.JWT_SECRET)
     res.json({ status: "ok" })
+  } catch (error) {
+    res.json({ status: 'error', error: ';))' })
+  }
+})
+
+router.post('/stats', async (req, res) => {
+  const { token } = req.body
+  try {
+    const { username } = jwt.verify(token, env.JWT_SECRET)
+    const { record } = await User.findOne({ username }, 'record').exec();
+
+    res.json({ status: "ok", data: record })
   } catch (error) {
     res.json({ status: 'error', error: ';))' })
   }

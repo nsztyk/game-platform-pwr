@@ -30,6 +30,11 @@ const routes: Array<RouteRecordRaw> = [
     component: () => import(/* webpackChunkName: "Room" */ '../pages/Room.vue'),
   },
   {
+    path: '/statistics',
+    name: 'Statistics',
+    component: () => import(/* webpackChunkName: "Statistics" */ '../pages/PlayerStats.vue')
+  },
+  {
     path: "/:catchAll(.*)",
     redirect: { name: 'Account' }
   }
