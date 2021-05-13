@@ -8,8 +8,11 @@
     <router-link :to="{ name: 'Statistics' }">
       Check your stats
     </router-link>
-    <button @click="createNewRoom">Create new room</button>
-    <button @click="connectToRandomRoom">Connect to random room</button>
+
+    <custom-modal />
+
+    <button @click="newRoom">Create new room</button>
+    <button @click="connectToRandomRoom">Connect to a random room</button>
     <h2>Created rooms, click name to join!</h2>
     <ul>
       <li v-for="(room, index) in getRooms" :key="index">
@@ -35,31 +38,36 @@
 
 <script lang="ts">
 import router from "@/router";
-import { defineComponent } from "vue";
+import { defineComponent} from "vue";
 import { removeToken, isTokenAuthorized } from "../middleware/TokenService";
+import { showModal} from '../use/modalControl'
 import {
   connectToServer,
-  createNewRoom,
   getRooms,
   getPlayers,
   exitRoom,
 } from "../middleware/SocketConnection";
+import CustomModal from "@/components/CustomModal.vue";
 
 export default defineComponent({
   name: "ChooseGame",
   setup() {
     const connectToRandomRoom = () => {
-      const roomsID = getRooms.value.map(roomInfo => roomInfo.id)
-      const chosenId = [Math.floor(Math.random() * roomsID.length)]
-      router.push({ name: 'Room', params: { id: chosenId[0] } })
+      const roomsID = getRooms.value.map((roomInfo) => roomInfo.id);
+      const chosenId = [Math.floor(Math.random() * roomsID.length)];
+      router.push({ name: "Room", params: { id: chosenId[0] } });
     };
+    const newRoom = () => {
+      showModal()
+    }
     return {
-      createNewRoom,
       getRooms,
       getPlayers,
       connectToRandomRoom,
+      newRoom,
     };
   },
+  components: { CustomModal },
   methods: {
     logOut() {
       removeToken();
