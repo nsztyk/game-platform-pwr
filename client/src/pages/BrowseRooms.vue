@@ -5,11 +5,12 @@
     <button @click="logOut">
       log out
     </button>
-    <router-link :to="{ name: 'Statistics'}">
+    <router-link :to="{ name: 'Statistics' }">
       Check your stats
     </router-link>
     <button @click="createNewRoom">Create new room</button>
-    <h2>Created rooms</h2>
+    <button @click="connectToRandomRoom">Connect to random room</button>
+    <h2>Created rooms, click name to join!</h2>
     <ul>
       <li v-for="(room, index) in getRooms" :key="index">
         <router-link :to="{ name: 'Room', params: { id: room.id } }">
@@ -17,7 +18,7 @@
         </router-link>
         {{ room.users }}
         <p class="text-green-500">
-        {{ room.admin }}
+          {{ room.admin }}
         </p>
       </li>
     </ul>
@@ -47,10 +48,16 @@ import {
 export default defineComponent({
   name: "ChooseGame",
   setup() {
+    const connectToRandomRoom = () => {
+      const roomsID = getRooms.value.map(roomInfo => roomInfo.id)
+      const chosenId = [Math.floor(Math.random() * roomsID.length)]
+      router.push({ name: 'Room', params: { id: chosenId[0] } })
+    };
     return {
       createNewRoom,
       getRooms,
       getPlayers,
+      connectToRandomRoom,
     };
   },
   methods: {
