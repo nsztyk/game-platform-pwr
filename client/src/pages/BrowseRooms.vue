@@ -54,8 +54,10 @@ export default defineComponent({
   setup() {
     const connectToRandomRoom = () => {
       const roomsID = getRooms.value.map((roomInfo) => roomInfo.id);
-      const chosenId = [Math.floor(Math.random() * roomsID.length)];
-      router.push({ name: "Room", params: { id: chosenId[0] } });
+      if (roomsID.length > 0) {
+        const chosenId = [Math.floor(Math.random() * roomsID.length)];
+        router.push({ name: "Room", params: { id: chosenId[0] } });
+      }
     };
     const newRoom = () => {
       showModal()
