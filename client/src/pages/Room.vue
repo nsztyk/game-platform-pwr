@@ -153,10 +153,13 @@ export default defineComponent({
   },
   watch: {
     roomHasPassword(passwd) {
-      if (passwd !== undefined) {
+      if (passwd !== undefined && !isAdmin.value) {
         // If room doesnt have password just connect to the server
-        if (!passwd && !isAdmin.value) {
+        if (!passwd) {
           joinRoom();
+        } else {
+          const passwordGuess = prompt('Podaj hasło do pokoju')
+          joinRoom(passwordGuess)
         }
       }
     },

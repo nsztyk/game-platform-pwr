@@ -147,10 +147,22 @@ io.on('connection', socket => {
     io.emit('connected-players', getPlayers())
   })
 
-  socket.on('join-room', (id) => {
+  socket.on('join-room', ({id, guessedPassword}) => {
     // If room does exist and user with that nickname is not in the room connect socket to room
+    let permisionToRoom = false
+
     const room = getRoomWithId(id)
-    if (room && !room.users.includes(users[socket.id])) {
+    const roomPassword = roomPasswords[id]
+    
+    // If there isnt password or player is admin give permision to enter a room
+    if (!roomPassword || room.admin == users[socket.id])
+      permisionToRoom = true
+
+    // If player enter a correct password give him permsion as well
+    else if (roomPassword == guessedPassword)
+      permisionToRoom = true
+    
+    if (room && !room.users.includes(users[socket.id]) && permisionToRoom) {
       socket.join(id)
       socket.to(id).emit('user-connected', users[socket.id])
       addUserToRoom(id, users[socket.id])
@@ -160,6 +172,10 @@ io.on('connection', socket => {
         socket.emit('curr-game-info', roomDetails[room.id])
       }
       io.emit('rooms', rooms)
+    }
+    // If player entered wrong password kick him from the room
+    if (!permisionToRoom && roomPassword != guessedPassword){
+      socket.emit('wrong-password-kick')
     }
   })
 

@@ -47,6 +47,12 @@ const addOnEvents = () => {
     router.push({ name: "Room", params: { id: id } });
   });
 
+  socket.on("wrong-password-kick", () => {
+    // WrongPassword cant be boolean idk why
+    router.push({ name: "Game" })
+    alert("Wrong password ")
+  })
+
   socket.on("chat-message", ({ message, nickname }) => {
     messages.value.push(`${nickname}: ${message}`);
   });
@@ -108,8 +114,11 @@ export const setCurrentRoom = (id: number) => {
 }
 
 
-export const joinRoom = () => {
-  socket.emit("join-room", currentRoom.value);
+export const joinRoom = (password?: string | null) => {
+  socket.emit("join-room", {
+    id: currentRoom.value,
+    guessedPassword: password
+  });
 }
 
 export const sendMessage = (message: string) => {
