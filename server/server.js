@@ -184,7 +184,9 @@ io.on('connection', socket => {
   })
 
   socket.on('send-chat-message', ({ message, id }) => {
-    socket.to(id).emit('chat-message', { message: message, nickname: users[socket.id] })
+    const room = getRoomWithId(id)
+    if (room.users.includes(users[socket.id]))
+      socket.to(id).emit('chat-message', { message: message, nickname: users[socket.id] })
   })
 
   socket.on('disconnecting', () => handleDisconnecting());

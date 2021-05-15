@@ -103,9 +103,13 @@ export const createNewRoom = (roomName?: string, roomPassword?: string) => {
   })
 }
 
-export const joinRoom = (id: number) => {
-  socket.emit("join-room", id);
+export const setCurrentRoom = (id: number) => {
   currentRoom.value = id
+}
+
+
+export const joinRoom = () => {
+  socket.emit("join-room", currentRoom.value);
 }
 
 export const sendMessage = (message: string) => {

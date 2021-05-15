@@ -81,6 +81,7 @@ import {
   addPlayerToGame,
   startGame,
   endGame,
+  setCurrentRoom,
 } from "../middleware/SocketConnection";
 import {
   getGames,
@@ -103,6 +104,11 @@ export default defineComponent({
       messageText: "",
       destinationId: Number(this.$route.params.id),
     };
+  },
+  computed: {
+    roomHasPassword(){
+      return roomDetails.value ? roomDetails.value.hasPassword : undefined
+    }
   },
   components: {
     Tictactoe,
@@ -141,8 +147,19 @@ export default defineComponent({
       this.messageText = "";
     },
   },
+  watch: {
+    roomHasPassword(val){
+      console.log(val);
+    }
+  },
   async created() {
-    if (await isTokenAuthorized()) joinRoom(this.destinationId);
+    if (await isTokenAuthorized()) {
+      
+      setCurrentRoom(this.destinationId)
+      // if (isAdmin.value){
+        joinRoom();
+      // }
+    }
     else this.logOut();
   },
 });
