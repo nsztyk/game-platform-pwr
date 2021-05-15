@@ -34,32 +34,33 @@
                 <div class="sm:mr-5">
                   <div>
                     <label
-                      for="price"
+                      for="roomName"
                       class="blockfont-medium text-gray-700 ml-1"
                       >Name</label
                     >
                     <div class="mt-1 relative rounded-md shadow-sm"></div>
                     <input
                       type="text"
-                      name="price"
-                      id="price"
+                      name="roomName"
+                      id="roomName"
                       class="block w-full pr-6 text-base py-1 pl-1 border-b-2 border-gray-400"
                       placeholder="TicTacToeRoom"
+                      v-model="roomName"
                     />
                   </div>
                 </div>
                 <div class="mt-3 sm:mt-0 sm:ml-5">
                   <div>
                     <label
-                      for="price"
+                      for="roomPassword"
                       class="blockfont-medium text-gray-700 ml-1"
                       >Password</label
                     >
                     <div class="mt-1 relative rounded-md shadow-sm"></div>
                     <input
                       type="password"
-                      name="price"
-                      id="price"
+                      name="roomPassword"
+                      id="roomPassword"
                       class="block w-full pr-6 text-base border-b-2 border-gray-400 py-1 pl-1"
                       placeholder="Leave for no password"
                     />
@@ -91,21 +92,24 @@
 </template>
 
 <script lang="ts">
-import { defineComponent } from "vue";
+import { defineComponent, ref } from "vue";
 import { isModalVisible, hideModal } from "../use/modalControl";
 import { createNewRoom } from "../middleware/SocketConnection";
 
 export default defineComponent({
   name: "CustomModal",
   setup() {
+    const roomName = ref("")
+
     const handleCreatingRoom = () => {
-      createNewRoom();
+      createNewRoom(roomName.value);
       hideModal()
     };
     return {
       isModalVisible,
       hideModal,
       handleCreatingRoom,
+      roomName,
     };
   },
 });

@@ -160,10 +160,11 @@ io.on('connection', socket => {
     }
   })
 
-  socket.on('new-room', () => {
+  socket.on('new-room', ({givenName}) => {
     const lastId = rooms.length === 0 ? 0 : rooms[rooms.length - 1].id + 1
+    console.log(givenName);
     rooms.push({
-      name: `room${lastId}`,
+      name: givenName ? givenName: `room${lastId}`,
       id: lastId,
       users: [],
       players: [],

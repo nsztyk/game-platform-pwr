@@ -95,8 +95,10 @@ export const exitRoom = () => {
 }
 
 
-export const createNewRoom = () => {
-  socket.emit("new-room")
+export const createNewRoom = (roomName?: string) => {
+  socket.emit("new-room", {
+    givenName: roomName
+  })
 }
 
 export const joinRoom = (id: number) => {
