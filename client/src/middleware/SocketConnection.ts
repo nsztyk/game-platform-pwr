@@ -10,6 +10,7 @@ interface RoomInterface {
   id: number;
   admin: string;
   game: AvaliableGames;
+  hasPassword: boolean;
 }
 
 interface CurrGameDetails {
