@@ -26,8 +26,12 @@
       <p class="text-lg" v-if="getCurrGameDetails.gameStarted">
         GAME STARTED
       </p>
-      <div class="text-xl" v-if="getResult">Result: {{getCurrGameDetails.result}}</div>
-      <div class="text-xl" v-if="getResult && isAdmin" @click="endGame">Submit game</div>
+      <div class="text-xl" v-if="getResult">
+        Result: {{ getCurrGameDetails.result }}
+      </div>
+      <div class="text-xl" v-if="getResult && isAdmin" @click="endGame">
+        Submit game
+      </div>
       <component :is="getGameComponent" />
     </div>
     <div class="bg-gray-200 w-full p-5">
@@ -92,10 +96,10 @@ import {
   isInitiated,
   getPlayerInPosition,
   canGameBeStarted,
-  getResult
+  getResult,
 } from "../middleware/GamesService";
 import Tictactoe from "../games/Tictactoe.vue";
-import Rpsls from "../games/Rpsls.vue"
+import Rpsls from "../games/Rpsls.vue";
 
 export default defineComponent({
   name: "ChooseGame",
@@ -106,13 +110,13 @@ export default defineComponent({
     };
   },
   computed: {
-    roomHasPassword(){
-      return roomDetails.value ? roomDetails.value.hasPassword : undefined
-    }
+    roomHasPassword() {
+      return roomDetails.value ? roomDetails.value.hasPassword : undefined;
+    },
   },
   components: {
     Tictactoe,
-    Rpsls
+    Rpsls,
   },
   setup() {
     return {
@@ -148,19 +152,22 @@ export default defineComponent({
     },
   },
   watch: {
-    roomHasPassword(val){
-      console.log(val);
-    }
+    roomHasPassword(passwd) {
+      if (passwd !== undefined) {
+        // If room doesnt have password just connect to the server
+        if (!passwd && !isAdmin.value) {
+          joinRoom();
+        }
+      }
+    },
   },
   async created() {
     if (await isTokenAuthorized()) {
-      
-      setCurrentRoom(this.destinationId)
-      // if (isAdmin.value){
+      setCurrentRoom(this.destinationId);
+      if (isAdmin.value) {
         joinRoom();
-      // }
-    }
-    else this.logOut();
+      }
+    } else this.logOut();
   },
 });
 </script>

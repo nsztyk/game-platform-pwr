@@ -148,12 +148,13 @@ io.on('connection', socket => {
   })
 
   socket.on('join-room', (id) => {
-    // If room doesn't exist dont connect socket to room
-    if (getRoomWithId(id)) {
+    // If room does exist and user with that nickname is not in the room connect socket to room
+    const room = getRoomWithId(id)
+    if (room && !room.users.includes(users[socket.id])) {
       socket.join(id)
       socket.to(id).emit('user-connected', users[socket.id])
       addUserToRoom(id, users[socket.id])
-      const room = getRoomWithId(id)
+      
       if (room.game) {
         socket.emit('initalize-game-client', { game: room.game, gameDetails: roomDetails[room.id] })
         socket.emit('curr-game-info', roomDetails[room.id])
