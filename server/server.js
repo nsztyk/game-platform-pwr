@@ -48,7 +48,7 @@ const addGameResultToDb = (game, result) => {
 
     switch (game) {
       case 'Tictactoe':
-        User.findOneAndUpdate({ username: res.player }, { $inc: { [`record.tictactoe.${gameRes}`] : 1 } }).exec()
+        User.findOneAndUpdate({ username: res.player }, { $inc: { [`record.tictactoe.${gameRes}`]: 1 } }).exec()
         break;
       case 'Rpsls':
         switch (howManyPlayers) {
@@ -64,7 +64,7 @@ const addGameResultToDb = (game, result) => {
           default:
             break;
         }
-        User.findOneAndUpdate({ username: res.player }, { $inc: { [`record.rpsls.${howManyPlayers}.${gameRes}`] : 1 } }).exec()
+        User.findOneAndUpdate({ username: res.player }, { $inc: { [`record.rpsls.${howManyPlayers}.${gameRes}`]: 1 } }).exec()
         break;
     }
   }
@@ -146,15 +146,18 @@ io.on('connection', socket => {
   })
 
   socket.on('join-room', (id) => {
-    socket.join(id)
-    socket.to(id).emit('user-connected', users[socket.id])
-    addUserToRoom(id, users[socket.id])
-    const room = getRoomWithId(id)
-    if (room.game) {
-      socket.emit('initalize-game-client', { game: room.game, gameDetails: roomDetails[room.id] })
-      socket.emit('curr-game-info', roomDetails[room.id])
+    // If room doesn't exist dont connect socket to room
+    if (getRoomWithId(id)) {
+      socket.join(id)
+      socket.to(id).emit('user-connected', users[socket.id])
+      addUserToRoom(id, users[socket.id])
+      const room = getRoomWithId(id)
+      if (room.game) {
+        socket.emit('initalize-game-client', { game: room.game, gameDetails: roomDetails[room.id] })
+        socket.emit('curr-game-info', roomDetails[room.id])
+      }
+      io.emit('rooms', rooms)
     }
-    io.emit('rooms', rooms)
   })
 
   socket.on('new-room', () => {
