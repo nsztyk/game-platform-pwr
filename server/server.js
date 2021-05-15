@@ -82,6 +82,8 @@ let rooms = []
 
 const roomDetails = {}
 
+const roomPasswords = {}
+
 const gameSecret = {}
 
 const addUserToRoom = (roomId, nickname) => {
@@ -160,9 +162,13 @@ io.on('connection', socket => {
     }
   })
 
-  socket.on('new-room', ({givenName}) => {
+  socket.on('new-room', ({givenName, givenPassword}) => {
+
     const lastId = rooms.length === 0 ? 0 : rooms[rooms.length - 1].id + 1
-    console.log(givenName);
+    
+    if (!!givenPassword)
+      roomPasswords[lastId] = givenPassword
+    
     rooms.push({
       name: givenName ? givenName: `room${lastId}`,
       id: lastId,
@@ -170,7 +176,9 @@ io.on('connection', socket => {
       players: [],
       admin: users[socket.id],
       game: undefined,
+      hasPassword: !!givenPassword
     })
+
     socket.emit('join-created-room', lastId)
     io.emit('rooms', rooms)
   })

@@ -63,6 +63,7 @@
                       id="roomPassword"
                       class="block w-full pr-6 text-base border-b-2 border-gray-400 py-1 pl-1"
                       placeholder="Leave for no password"
+                      v-model="roomPassword"
                     />
                   </div>
                 </div>
@@ -100,9 +101,10 @@ export default defineComponent({
   name: "CustomModal",
   setup() {
     const roomName = ref("")
+    const roomPassword = ref("")
 
     const handleCreatingRoom = () => {
-      createNewRoom(roomName.value);
+      createNewRoom(roomName.value, roomPassword.value);
       hideModal()
     };
     return {
@@ -110,6 +112,7 @@ export default defineComponent({
       hideModal,
       handleCreatingRoom,
       roomName,
+      roomPassword,
     };
   },
 });

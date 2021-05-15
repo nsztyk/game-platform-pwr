@@ -95,9 +95,10 @@ export const exitRoom = () => {
 }
 
 
-export const createNewRoom = (roomName?: string) => {
+export const createNewRoom = (roomName?: string, roomPassword?: string) => {
   socket.emit("new-room", {
-    givenName: roomName
+    givenName: roomName,
+    givenPassword: roomPassword,
   })
 }
 
