@@ -102,7 +102,7 @@ import Tictactoe from "../games/Tictactoe.vue";
 import Rpsls from "../games/Rpsls.vue";
 
 export default defineComponent({
-  name: "ChooseGame",
+  name: "Room",
   data() {
     return {
       messageText: "",

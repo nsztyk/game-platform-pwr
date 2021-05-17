@@ -50,7 +50,7 @@ import {
 import CustomModal from "@/components/CustomModal.vue";
 
 export default defineComponent({
-  name: "ChooseGame",
+  name: "BrowseRooms",
   setup() {
     const connectToRandomRoom = () => {
       const roomsID = getRooms.value.map((roomInfo) => roomInfo.id);

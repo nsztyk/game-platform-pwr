@@ -153,7 +153,6 @@ io.on('connection', socket => {
 
     const room = getRoomWithId(id)
     const roomPassword = roomPasswords[id]
-    
     // If there isnt password or player is admin give permision to enter a room
     if (!roomPassword || room.admin == users[socket.id])
       permisionToRoom = true
