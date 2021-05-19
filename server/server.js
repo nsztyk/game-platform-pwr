@@ -95,7 +95,18 @@ const addUserToRoom = (roomId, nickname) => {
 }
 
 const deleteEmptyRooms = () => {
+  // When deleting rooms also delete and information assosiate with that room
+  for (room of rooms){
+    if (!room.users.length){
+      const roomId = room.id
+      delete users[roomId]
+      delete roomDetails[roomId]
+      delete roomPasswords[roomId]
+      delete gameSecret[roomId]
+    }
+  }
   rooms = rooms.filter(room => room.users.length)
+
 }
 
 const deleteUserFromRooms = (roomsId, nickname) => {
