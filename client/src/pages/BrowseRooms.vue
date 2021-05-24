@@ -1,10 +1,7 @@
 <template>
   <div
-    class="flex flex-col mx-auto w-7/12 sm:w-8/12 md:w-7/12 lg:w-5/12 xl:w-4/12"
+    class="flex flex-col mx-auto"
   >
-    <button @click="logOut">
-      log out
-    </button>
     <router-link :to="{ name: 'Statistics' }">
       Check your stats
     </router-link>
