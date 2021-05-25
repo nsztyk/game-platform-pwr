@@ -1,70 +1,52 @@
 <template>
   <custom-modal />
   <div class="pt-10">
+    <!-- TODO change to grid 3 col ? -->
     <div
-      class="flex items-stretch justify-between custom-shadow bg-gray-900 w-1/2 mx-auto text-2xl py-2 px-5"
+      class="grid grid-cols-3 gap-x-20 custom-shadow bg-gray-900 w-1/2 mx-auto text-2xl py-2 px-5"
     >
       <router-link :to="{ name: 'Statistics' }">
-        <menu-nav imgSrc="Futures.png">
+        <browse-rooms-nav imgSrc="Futures.png">
           Statistics
-        </menu-nav>
+        </browse-rooms-nav>
       </router-link>
-      <menu-nav imgSrc="Controller.png" @click="newRoom">
+      <browse-rooms-nav imgSrc="Controller.png" @click="newRoom">
         New room
-      </menu-nav>
-      <menu-nav imgSrc="Dice.png" @click="connectToRandomRoom" class="pb-1">
+      </browse-rooms-nav>
+      <browse-rooms-nav
+        imgSrc="Dice.png"
+        @click="connectToRandomRoom"
+        class="pb-1"
+      >
         Random room
-      </menu-nav>
+      </browse-rooms-nav>
     </div>
-    
+
     <div
-      class="flex items-stretch justify-between custom-shadow bg-gray-900 w-1/2 mx-auto text-xl mt-12"
+      class="flex flex-col items-stretch justify-between custom-shadow w-1/2 mx-auto text-xl mt-12"
     >
-    <div class="grid grid-cols-4 w-full items-center py-2 px-4 text-center">
-        <div>
-          Gra masna
-        </div>
-        <div>
-          RPSLS
-        </div>
-        <div>
-          <img class="mx-auto" src="../assets/Dice.png" alt="">
-        </div>
-        <div class="flex flex-col">
-          <div>
-            Player1
-          </div>
-          <div>
-            Player2
-          </div>
-        </div>
-    </div>
-    <ul>
-     
-
-
-
-      <li v-for="(room, index) in getRooms" :key="index">
-        <router-link :to="{ name: 'Room', params: { id: room.id } }">
-          {{ room.name }}
-        </router-link>
-        {{ room.users }}
-        <p class="text-green-500">
-          {{ room.admin }}
-        </p>
-      </li>
-    </ul>
-
+        <template v-for="(room, index) in getRooms" :key="index">
+          <router-link :to="{ name: 'Room', params: { id: room.id } }">
+            <browse-rooms-room
+            :position="index"
+            :roomGame="room.game"
+            :roomHasPassword="room.hasPassword"
+            :roomName="room.name"
+            :roomPlayers="room.users"
+            />
+          </router-link>
+        </template>
     </div>
 
-    <div class="my-10">
+    <!-- Section about connected players -->
+    <!-- <div class="my-10">
       <ul>
         <p>PLAYERS</p>
         <li v-for="(player, index) in getPlayers" :key="index">
           {{ player }}
         </li>
       </ul>
-    </div>
+    </div> -->
   </div>
 </template>
 
@@ -80,7 +62,8 @@ import {
   exitRoom,
 } from "../middleware/SocketConnection";
 import CustomModal from "@/components/CustomModal.vue";
-import MenuNav from "../components/MenuNav.vue";
+import BrowseRoomsNav from "../components/BrowseRoomsNav.vue";
+import BrowseRoomsRoom from "../components/BrowseRoomsRoom.vue";
 
 export default defineComponent({
   name: "BrowseRooms",
@@ -102,7 +85,7 @@ export default defineComponent({
       newRoom,
     };
   },
-  components: { CustomModal, MenuNav },
+  components: { CustomModal, BrowseRoomsNav, BrowseRoomsRoom },
   methods: {
     logOut() {
       removeToken();

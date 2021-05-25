@@ -1,11 +1,11 @@
 <template>
   <div
     class="gray-bg pt-2 pb-0 px-10 rounded-lg text-center h-full cursor-pointer"
-    style="min-width: 220px"
   >
-    <slot> </slot>
+    <slot></slot>
     <div>
-      <img class="mx-auto mt-2" :src="require(`@/assets/${imgSrc}`)" alt="Statistics icon" />
+      <!-- Todo img alt props-->
+      <img class="mx-auto mt-2" :src="require(`@/assets/${imgSrc}`)" alt="Icon" />
     </div>
   </div>
 </template>
@@ -18,10 +18,6 @@ export default defineComponent({
     imgSrc: {
       type: String,
       required: true,
-    },
-    addPadingBot: {
-      type: Boolean,
-      required: false,
     }
   },
 });
