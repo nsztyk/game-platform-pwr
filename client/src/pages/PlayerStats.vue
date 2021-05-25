@@ -1,64 +1,62 @@
 <template>
-  <div class="container mx-auto">
-    <h2 class="text-4xl mb-6 text-center">STATISTICS</h2>
-    <router-link :to="{ name: 'Game' }">Go back</router-link>
-    <div class="grid grid-cols-3 justify-between mx-auto w-1/2" v-if="loaded">
-      <div class="text-2xl">Num of players</div>
-      <div class="text-3xl">TicTacToe</div>
-      <div class="text-3xl">RPSLS</div>
-      <div class="text-3xl">2</div>
+  <div class="pt-10">
+    <div
+      class="flex items-center justify-center custom-shadow bg-gray-900 w-1/3 mx-auto text-3xl mb-6 py-2"
+    >
+      <h2 class="mr-4">Statistics</h2>
+      <img src="../assets/Futures.png" alt="Statistic icon" />
+    </div>
+    <div class="custom-shadow bg-gray-900 w-1/3 mx-auto p-4">
+      <div
+        id="wrapper"
+        class="grid grid-cols-3 justify-between mx-auto text-2xl rounded-lg py-3"
+        v-if="loaded"
+      >
+        <div class="ml-10 mb-6">Game</div>
+        <div class="justify-self-center">Players</div>
+        <div class="justify-self-center">Record</div>
 
-      <div class="text-3xl ml-2">
-        <span class="text-green-600">{{ statistics.tictactoe.win }} </span>
-        <span> / </span>
-        <span class="text-yellow-600">{{ statistics.tictactoe.draw }} </span>
-        <span> / </span>
-        <span class="text-red-600">{{ statistics.tictactoe.lose }} </span>
-      </div>
-      <div class="text-3xl">
-        <span class="text-green-600"
-          >{{ statistics.rpsls.twoPlayers.win }}
-        </span>
-        <span> / </span>
-        <span class="text-yellow-600"
-          >{{ statistics.rpsls.twoPlayers.draw }}
-        </span>
-        <span> / </span>
-        <span class="text-red-600"
-          >{{ statistics.rpsls.twoPlayers.lose }}
-        </span>
-      </div>
-      <div class="text-3xl">
-        3
-      </div>
-      <div class="text-3xl col-start-3 col-end-3">
-        <span class="text-green-600"
-          >{{ statistics.rpsls.threePlayers.win }}
-        </span>
-        <span> / </span>
-        <span class="text-yellow-600"
-          >{{ statistics.rpsls.threePlayers.draw }}
-        </span>
-        <span> / </span>
-        <span class="text-red-600"
-          >{{ statistics.rpsls.threePlayers.lose }}
-        </span>
-      </div>
-      <div class="text-3xl">
-        4
-      </div>
-      <div class="text-3xl col-start-3 col-end-3">
-        <span class="text-green-600"
-          >{{ statistics.rpsls.fourPlayers.win }}
-        </span>
-        <span> / </span>
-        <span class="text-yellow-600"
-          >{{ statistics.rpsls.fourPlayers.draw }}
-        </span>
-        <span> / </span>
-        <span class="text-red-600"
-          >{{ statistics.rpsls.fourPlayers.lose }}
-        </span>
+        <div class="ml-10 mb-12">TicTacToe</div>
+
+        <statistics-base-row
+          :win="statistics.tictactoe.win"
+          :draw="statistics.tictactoe.draw"
+          :lose="statistics.tictactoe.lose"
+          num="2"
+        />
+        
+
+        <div class="ml-10">RPSLS</div>
+        <statistics-base-row
+          :win="statistics.rpsls.twoPlayers.win"
+          :draw="statistics.rpsls.twoPlayers.draw"
+          :lose="statistics.rpsls.twoPlayers.lose"
+          num="2"
+        />
+
+        <statistics-base-row
+          :win="statistics.rpsls.threePlayers.win"
+          :draw="statistics.rpsls.threePlayers.draw"
+          :lose="statistics.rpsls.threePlayers.lose"
+          num="3"
+        />
+
+        <statistics-base-row
+          :win="statistics.rpsls.fourPlayers.win"
+          :draw="statistics.rpsls.fourPlayers.draw"
+          :lose="statistics.rpsls.fourPlayers.lose"
+          num="4"
+        />
+
+      
+
+        <div class="col-start-2 col-end-4 border-t-2 mb-3 mr-6"></div>
+        <statistics-base-row
+          :win="statistics.rpsls.twoPlayers.win + statistics.rpsls.threePlayers.win + statistics.rpsls.fourPlayers.win"
+          :draw="statistics.rpsls.twoPlayers.draw + statistics.rpsls.threePlayers.draw + statistics.rpsls.fourPlayers.draw"
+          :lose="statistics.rpsls.twoPlayers.lose + statistics.rpsls.threePlayers.lose + statistics.rpsls.fourPlayers.lose"
+          num=""
+        />
       </div>
     </div>
   </div>
@@ -67,9 +65,13 @@
 <script>
 import { defineComponent } from "vue";
 import { getStatistics } from "../middleware/TokenService";
+import StatisticsBaseRow from "../components/StatisticsBaseRow";
 
 export default defineComponent({
   name: "PlayerStats",
+  components: {
+    StatisticsBaseRow,
+  },
   data() {
     return {
       loaded: false,
@@ -99,13 +101,17 @@ export default defineComponent({
       },
     };
   },
-  created(){
+  created() {
     getStatistics().then((stats) => {
-      this.statistics = stats
-      this.loaded = true
-    })
-  }
+      this.statistics = stats;
+      this.loaded = true;
+    });
+  },
 });
 </script>
 
-<style></style>
+<style scoped>
+#wrapper {
+  background-color: #0b111e;
+}
+</style>
