@@ -235,6 +235,7 @@ io.on('connection', socket => {
       const room = getRoomWithId(id)
       // TODO Check if game is avaliable
       room.game = selectedGame
+      io.emit('rooms', rooms)
       initGameInRoom(room)
     }
   })
