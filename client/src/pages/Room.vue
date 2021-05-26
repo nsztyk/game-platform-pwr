@@ -19,8 +19,6 @@ import {
   setCurrentRoom,
 } from "../middleware/SocketConnection";
 import { exitGame } from "../middleware/GamesService";
-import Tictactoe from "../games/Tictactoe.vue";
-import Rpsls from "../games/Rpsls.vue";
 import RoomAdmin from "../components/RoomAdmin.vue";
 import RoomPlayers from "../components/RoomPlayers.vue";
 import RoomChat from "@/components/RoomChat.vue";
@@ -40,8 +38,6 @@ export default defineComponent({
     },
   },
   components: {
-    Tictactoe,
-    Rpsls,
     RoomAdmin,
     RoomPlayers,
     RoomChat,
