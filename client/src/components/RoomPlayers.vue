@@ -1,5 +1,5 @@
 <template>
-  <div class="custom-shadow bg-gray-900">
+  <div class="custom-shadow bg-gray-900 col-span-2">
     <div v-if="isInitiated">
       <div class="grid grid-cols-2">
         <div

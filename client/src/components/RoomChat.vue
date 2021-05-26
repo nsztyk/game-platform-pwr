@@ -1,5 +1,5 @@
 <template>
-  <div class="custom-shadow bg-gray-900 col-start-2 col-end-2">
+  <div class="custom-shadow bg-gray-900 col-start-3 col-end-5">
     <input type="text" placeholder="message" v-model="messageText" />
     <button @click="sendMessageToOthers">Send</button>
     <div>

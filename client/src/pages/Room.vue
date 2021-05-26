@@ -1,8 +1,8 @@
 <template>
-  <div class="grid grid-cols-2 gap-10 mx-auto w-1/2 pt-20">
+  <div class="grid grid-cols-5 gap-10 mx-auto w-1/2 pt-20">
     <room-admin />
     <room-players />
-    <component :is="getGameComponent"/>
+    <room-game />
     <room-chat />
   </div>
 </template>
@@ -11,13 +11,20 @@
 import router from "@/router";
 import { defineComponent } from "vue";
 import { removeToken, isTokenAuthorized } from "../middleware/TokenService";
-import { exitRoom, isAdmin, joinRoom, roomDetails, setCurrentRoom } from "../middleware/SocketConnection";
-import { exitGame, getGameComponent} from "../middleware/GamesService";
+import {
+  exitRoom,
+  isAdmin,
+  joinRoom,
+  roomDetails,
+  setCurrentRoom,
+} from "../middleware/SocketConnection";
+import { exitGame } from "../middleware/GamesService";
 import Tictactoe from "../games/Tictactoe.vue";
 import Rpsls from "../games/Rpsls.vue";
-import RoomAdmin from "../components/RoomAdmin.vue"
-import RoomPlayers from "../components/RoomPlayers.vue"
+import RoomAdmin from "../components/RoomAdmin.vue";
+import RoomPlayers from "../components/RoomPlayers.vue";
 import RoomChat from "@/components/RoomChat.vue";
+import RoomGame from "@/components/RoomGame.vue";
 
 export default defineComponent({
   name: "Room",
@@ -37,12 +44,8 @@ export default defineComponent({
     Rpsls,
     RoomAdmin,
     RoomPlayers,
-    RoomChat
-  },
-  setup() {
-    return {
-      getGameComponent
-    };
+    RoomChat,
+    RoomGame,
   },
   beforeRouteLeave() {
     exitRoom();

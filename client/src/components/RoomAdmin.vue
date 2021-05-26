@@ -1,5 +1,5 @@
 <template>
-  <div class="custom-shadow bg-gray-900">
+  <div class="custom-shadow bg-gray-900 col-span-3">
     <div v-if="isAdmin && !getCurrGameDetails.gameStarted">
       <p class="text-lg">You are admin, choose game to play</p>
       <ul>
