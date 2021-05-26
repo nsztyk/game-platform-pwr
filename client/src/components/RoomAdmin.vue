@@ -1,19 +1,25 @@
 <template>
-  <div class="custom-shadow bg-gray-900 col-span-3">
+  <div class="custom-shadow bg-gray-900 col-span-3 text-xl py-2">
     <div v-if="isAdmin && !getCurrGameDetails.gameStarted">
-      <p class="text-lg">You are admin, choose game to play</p>
-      <ul>
-        <li
+      <div class="flex items-center justify-center mb-3">
+        <h3 class="mr-3 text-3xl">
+          Admin
+        </h3>
+        <img src="../assets/Admin.png" alt="Admin icon" />
+      </div>
+      <div class="grid grid-cols-3 gap-5 px-2 text-center items-center">
+        <div class="">
+          Choose Game:
+        </div>
+        <div
           v-for="(game, index) in getGames"
           :key="index"
           @click="chooseGame(game)"
-          class="cursor-pointer"
+          class="cursor-pointer wrapper px-3 py-1 rounded-lg"
+          :class="{ active: currGame == game }"
         >
           {{ game }}
-        </li>
-      </ul>
-      <div v-if="canGameBeStarted" @click="startGame">
-        Start the game
+        </div>
       </div>
     </div>
     <div v-else-if="!getCurrGameDetails.gameStarted">
@@ -42,8 +48,8 @@ import {
 import {
   getCurrGameDetails,
   isAdmin,
-  startGame,
   endGame,
+  roomDetails,
 } from "../middleware/SocketConnection";
 
 export default defineComponent({
@@ -55,9 +61,34 @@ export default defineComponent({
       chooseGame,
       canGameBeStarted,
       getResult,
-      startGame,
       endGame,
     };
   },
+  computed: {
+    currGame() {
+      return roomDetails.value.game;
+    },
+  },
 });
 </script>
+
+<style scoped>
+.wrapper {
+  background-color: #0b111e;
+}
+
+.active {
+  position: relative;
+}
+
+.active:after {
+  content: "";
+  display: block;
+  position: absolute;
+  top: 0;
+  right: 0;
+  bottom: 0;
+  left: 0;
+  border: 2px solid #b7b7b7;
+}
+</style>

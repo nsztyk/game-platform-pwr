@@ -233,8 +233,8 @@ io.on('connection', socket => {
   socket.on('chosen-game', ({ selectedGame, id }) => {
     if (isPlayerAdminInRoom(users[socket.id], id)) {
       const room = getRoomWithId(id)
-      // TODO Check if game is avaliable
-      room.game = selectedGame
+      // TODO Check if game is avaliable 
+      room.game = room.game == selectedGame ? undefined : selectedGame 
       io.emit('rooms', rooms)
       initGameInRoom(room)
     }
