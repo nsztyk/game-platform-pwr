@@ -1,5 +1,5 @@
 <template>
-  <div class="grid grid-cols-2 mx-auto w-1/2 pt-10">
+  <div class="grid grid-cols-2 gap-10 mx-auto w-1/2 pt-20">
     <room-admin />
     <room-players />
     <component :is="getGameComponent"/>
