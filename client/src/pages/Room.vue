@@ -1,105 +1,23 @@
 <template>
-  <button @click="logOut">
-    log out
-  </button>
-  <div class="flex flex-row mx-auto w-6/12">
-    <div class="bg-gray-600 w-full p-5">
-      <div v-if="isAdmin && !getCurrGameDetails.gameStarted">
-        <p class="text-lg">You are admin, choose game to play</p>
-        <ul>
-          <li
-            v-for="(game, index) in getGames"
-            :key="index"
-            @click="chooseGame(game)"
-            class="cursor-pointer"
-          >
-            {{ game }}
-          </li>
-        </ul>
-        <div v-if="canGameBeStarted" @click="startGame">
-          Start the game
-        </div>
-      </div>
-      <div v-else-if="!getCurrGameDetails.gameStarted">
-        <p class="text-lg">Admin is choosing game to play</p>
-      </div>
-      <p class="text-lg" v-if="getCurrGameDetails.gameStarted">
-        GAME STARTED
-      </p>
-      <div class="text-xl" v-if="getResult">
-        Result: {{ getCurrGameDetails.result }}
-      </div>
-      <div class="text-xl" v-if="getResult && isAdmin" @click="endGame">
-        Submit game
-      </div>
-      <component :is="getGameComponent" />
-    </div>
-    <div class="bg-gray-200 w-full p-5">
-      <div v-if="isInitiated">
-        <div class="grid grid-cols-2">
-          <div
-            v-for="(player, index) in getCurrGameDetails.players"
-            :key="index"
-            class="border-2 border-black m-1 ml-0 px-2 py-1"
-            @click="addPlayerToGame(index)"
-          >
-            {{ index }}
-            {{ getPlayerInPosition(index) }}
-          </div>
-        </div>
-      </div>
-      <div>
-        <input type="text" placeholder="message" v-model="messageText" />
-        <button @click="sendMessageToOthers">Send</button>
-        <div>
-          <ul>
-            <li v-for="(message, index) in getMessages" :key="index">
-              {{ message }}
-            </li>
-          </ul>
-        </div>
-      </div>
-    </div>
+  <div class="grid grid-cols-2 mx-auto w-1/2 pt-10">
+    <room-admin />
+    <room-players />
+    <component :is="getGameComponent"/>
+    <room-chat />
   </div>
-  DEV INFO
-  <p>roomDetail</p>
-  {{ roomDetails }}
-  <p>IsMyTurn</p>
-  {{ isMyTurn }}
-  <p>CurrgameDetails</p>
-  {{ getCurrGameDetails }}
 </template>
 
 <script lang="ts">
 import router from "@/router";
 import { defineComponent } from "vue";
 import { removeToken, isTokenAuthorized } from "../middleware/TokenService";
-import {
-  joinRoom,
-  sendMessage,
-  getMessages,
-  exitRoom,
-  isAdmin,
-  roomDetails,
-  getCurrGameDetails,
-  addPlayerToGame,
-  startGame,
-  endGame,
-  setCurrentRoom,
-} from "../middleware/SocketConnection";
-import {
-  getGames,
-  chooseGame,
-  getGameComponent,
-  exitGame,
-  isMyTurn,
-  isInitiated,
-  getPlayerInPosition,
-  canGameBeStarted,
-  getResult,
-} from "../middleware/GamesService";
+import { exitRoom, isAdmin, joinRoom, roomDetails, setCurrentRoom } from "../middleware/SocketConnection";
+import { exitGame, getGameComponent} from "../middleware/GamesService";
 import Tictactoe from "../games/Tictactoe.vue";
 import Rpsls from "../games/Rpsls.vue";
+import RoomAdmin from "../components/RoomAdmin.vue"
+import RoomPlayers from "../components/RoomPlayers.vue"
+import RoomChat from "@/components/RoomChat.vue";
 
 export default defineComponent({
   name: "Room",
@@ -117,24 +35,13 @@ export default defineComponent({
   components: {
     Tictactoe,
     Rpsls,
+    RoomAdmin,
+    RoomPlayers,
+    RoomChat
   },
   setup() {
     return {
-      getMessages,
-      isAdmin,
-      getGames,
-      chooseGame,
-      getGameComponent,
-      roomDetails,
-      isMyTurn,
-      getCurrGameDetails,
-      isInitiated,
-      addPlayerToGame,
-      getPlayerInPosition,
-      canGameBeStarted,
-      startGame,
-      getResult,
-      endGame,
+      getGameComponent
     };
   },
   beforeRouteLeave() {
@@ -146,10 +53,6 @@ export default defineComponent({
       removeToken();
       router.push({ name: "Account" });
     },
-    sendMessageToOthers() {
-      sendMessage(this.messageText);
-      this.messageText = "";
-    },
   },
   watch: {
     roomHasPassword(passwd) {
@@ -158,8 +61,8 @@ export default defineComponent({
         if (!passwd) {
           joinRoom();
         } else {
-          const passwordGuess = prompt('Podaj hasło do pokoju')
-          joinRoom(passwordGuess)
+          const passwordGuess = prompt("Podaj hasło do pokoju");
+          joinRoom(passwordGuess);
         }
       }
     },
