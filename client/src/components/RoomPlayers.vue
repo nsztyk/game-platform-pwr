@@ -1,16 +1,21 @@
 <template>
-  <div class="custom-shadow bg-gray-900 col-span-2">
-    <div v-if="isInitiated">
-      <div class="grid grid-cols-2">
+  <div class="custom-shadow bg-gray-900 col-span-2" v-if="showComponent">
+    <div v-if="isInitiated" class="h-full">
+      <div class="grid grid-cols-2 h-full px-4 py-3 gap-4">
         <div
           v-for="(player, index) in getCurrGameDetails.players"
           :key="index"
-          class="border-2 border-black m-1 ml-0 px-2 py-1"
+          class="bg-gray-200 text-gray-900 rounded-md px-2 flex flex-col justify-center cursor-pointer"
           @click="addPlayerToGame(index)"
         >
           {{ index }}
           {{ getPlayerInPosition(index) }}
         </div>
+        <template v-if="addBlankRow">
+          <div v-for="elem in howManyElems" :key="elem" class="bg-gray-200 text-gray-900 rounded-md px-2 flex flex-col justify-center">
+              ---------------------
+          </div>
+        </template>
       </div>
     </div>
   </div>
@@ -33,5 +38,16 @@ export default defineComponent({
       getCurrGameDetails,
     };
   },
+  computed: {
+    showComponent() {
+      return getCurrGameDetails.value.players.length
+    },
+    addBlankRow() {
+      return getCurrGameDetails.value.players.length < 3
+    },
+    howManyElems(){
+      return 4 - getCurrGameDetails.value.players.length
+    }
+  }
 });
 </script>
