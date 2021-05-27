@@ -22,24 +22,21 @@
         </div>
       </div>
     </div>
-    <div
-      v-else-if="!getCurrGameDetails.gameStarted"
-      class="flex items-center justify-center mb-3"
-    >
-      <h3 class="mr-3 text-3xl">
-        Player
-      </h3>
-      <img src="../assets/Player.png" alt="Player icon" />
-    </div>
-    <p class="text-lg" v-if="getCurrGameDetails.gameStarted">
-      GAME STARTED
-    </p>
-    <div class="text-xl" v-if="getResult">
-      Result: {{ getCurrGameDetails.result }}
-    </div>
-    <div class="text-xl" v-if="getResult && isAdmin" @click="endGame">
-      Submit game
-    </div>
+    <template v-else-if="!getCurrGameDetails.gameStarted">
+      <div class="flex items-center justify-center mb-3">
+        <h3 class="mr-3 text-3xl">
+          Player
+        </h3>
+        <img src="../assets/Player.png" alt="Player icon" />
+      </div>
+      <div class="text-center" v-if="currGame">
+        <span class="mr-5">Current game:</span>
+        <span>{{ currGame }}</span>
+      </div>
+      <div v-else class="text-center">
+        Game has not been selected by admin yet
+      </div>
+    </template>
   </div>
 </template>
 
@@ -49,12 +46,10 @@ import {
   getGames,
   chooseGame,
   canGameBeStarted,
-  getResult,
 } from "../middleware/GamesService";
 import {
   getCurrGameDetails,
   isAdmin,
-  endGame,
   roomDetails,
 } from "../middleware/SocketConnection";
 
@@ -66,8 +61,6 @@ export default defineComponent({
       getGames,
       chooseGame,
       canGameBeStarted,
-      getResult,
-      endGame,
     };
   },
   computed: {
