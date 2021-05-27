@@ -1,6 +1,6 @@
 <template>
   <div
-    class="gray-bg pt-2 pb-0 px-10 rounded-lg text-center h-full cursor-pointer"
+    class="gray-bg pt-2 pb-0 px-5 rounded-lg text-center h-full cursor-pointer"
   >
     <slot></slot>
     <div>

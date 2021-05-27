@@ -1,5 +1,5 @@
 <template>
-  <div class="custom-shadow bg-gray-900 col-span-2 p-3"
+  <div class="custom-shadow bg-gray-900 col-span-2 p-3 order-2 lg:order-4"
   :class="{'self-stretch' : strechComponent}">
     <div class="wrapper rounded-lg px-4 py-2 flex justify-between mb-4">
       <input

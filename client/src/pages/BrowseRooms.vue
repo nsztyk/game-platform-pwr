@@ -1,9 +1,9 @@
 <template>
   <custom-modal />
-  <div class="pt-10">
+  <div class="pt-10 mx-auto w-11/12 md:w-9/12 lg:w-8/12 xl:w-7/12 2xl:w-6/12">
     <!-- TODO change to grid 3 col ? -->
     <div
-      class="grid grid-cols-3 gap-x-20 custom-shadow bg-gray-900 w-1/2 mx-auto text-2xl py-2 px-5"
+      class="grid grid-cols-3 gap-x-6 lg:gap-x-10 xl:gap-x-16 2xl:gap-x-20 custom-shadow bg-gray-900 text-2xl py-2 px-5"
     >
       <router-link :to="{ name: 'Statistics' }">
         <browse-rooms-nav imgSrc="Futures.png">
@@ -23,7 +23,7 @@
     </div>
 
     <div
-      class="flex flex-col items-stretch justify-between custom-shadow w-1/2 mx-auto text-xl mt-12"
+      class="flex flex-col items-stretch justify-between custom-shadow mx-auto text-xl mt-12"
     >
         <template v-for="(room, index) in getRooms" :key="index">
           <router-link :to="{ name: 'Room', params: { id: room.id } }">

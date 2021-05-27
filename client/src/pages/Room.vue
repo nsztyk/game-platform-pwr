@@ -1,5 +1,5 @@
 <template>
-  <div class="grid grid-cols-5 gap-10 mx-auto w-1/2 pt-20 items-start">
+  <div class="flex flex-col lg:grid lg:grid-cols-5 gap-10 mx-auto w-11/12 sm:w-9/12 md:w-7/12 lg:w-9/12 xl:w-7/12 2xl:w-6/12 pt-20 items-stretch lg:items-start">
     <room-admin />
     <room-players v-if="showPlayersComponent" />
     <room-game v-if="getGameComponent" />

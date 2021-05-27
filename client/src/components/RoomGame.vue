@@ -1,5 +1,5 @@
 <template>
-  <div class="col-span-3">
+  <div class="col-span-3 order-4 lg:order-3">
     <component :is="getGameComponent" />
   </div>
 </template>

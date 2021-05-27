@@ -65,7 +65,9 @@ export default defineComponent({
   },
   computed: {
     currGame() {
-      return roomDetails.value.game;
+      if (roomDetails.value)
+        return roomDetails.value.game;
+      return false
     },
   },
 });

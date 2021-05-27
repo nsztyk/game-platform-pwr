@@ -1,12 +1,12 @@
 <template>
-  <div class="pt-10">
+  <div class="pt-10 mx-auto w-10/12 sm:w-8/12 md:w-7/12 lg:w-6/12 xl:w-5/12 2xl:w-4/12">
     <div
-      class="flex items-center justify-center custom-shadow bg-gray-900 w-1/3 mx-auto text-3xl mb-6 py-2"
+      class="flex items-center justify-center custom-shadow bg-gray-900 text-3xl mb-6 py-2"
     >
       <h2 class="mr-4">Statistics</h2>
       <img src="../assets/Futures.png" alt="Statistic icon" />
     </div>
-    <div class="custom-shadow bg-gray-900 w-1/3 mx-auto p-4">
+    <div class="custom-shadow bg-gray-900 mx-auto p-4">
       <div
         id="wrapper"
         class="grid grid-cols-3 justify-between mx-auto text-2xl rounded-lg py-3"
