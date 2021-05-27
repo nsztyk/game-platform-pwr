@@ -1,8 +1,8 @@
 <template>
-  <div class="grid grid-cols-5 gap-10 mx-auto w-1/2 pt-20">
+  <div class="grid grid-cols-5 gap-10 mx-auto w-1/2 pt-20 items-start">
     <room-admin />
-    <room-players />
-    <room-game />
+    <room-players v-if="showPlayersComponent" />
+    <room-game v-if="getGameComponent" />
     <room-chat />
   </div>
 </template>
@@ -17,8 +17,9 @@ import {
   joinRoom,
   roomDetails,
   setCurrentRoom,
+  getCurrGameDetails,
 } from "../middleware/SocketConnection";
-import { exitGame } from "../middleware/GamesService";
+import { exitGame, getGameComponent } from "../middleware/GamesService";
 import RoomAdmin from "../components/RoomAdmin.vue";
 import RoomPlayers from "../components/RoomPlayers.vue";
 import RoomChat from "@/components/RoomChat.vue";
@@ -36,6 +37,14 @@ export default defineComponent({
     roomHasPassword() {
       return roomDetails.value ? roomDetails.value.hasPassword : undefined;
     },
+    showPlayersComponent(){
+      return getCurrGameDetails.value && getCurrGameDetails.value.players.length 
+    }
+  },
+  setup(){
+    return {
+      getGameComponent,
+    }
   },
   components: {
     RoomAdmin,

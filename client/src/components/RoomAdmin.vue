@@ -22,8 +22,14 @@
         </div>
       </div>
     </div>
-    <div v-else-if="!getCurrGameDetails.gameStarted">
-      <p class="text-lg">Admin is choosing game to play</p>
+    <div
+      v-else-if="!getCurrGameDetails.gameStarted"
+      class="flex items-center justify-center mb-3"
+    >
+      <h3 class="mr-3 text-3xl">
+        Player
+      </h3>
+      <img src="../assets/Player.png" alt="Player icon" />
     </div>
     <p class="text-lg" v-if="getCurrGameDetails.gameStarted">
       GAME STARTED

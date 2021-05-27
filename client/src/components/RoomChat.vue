@@ -1,5 +1,6 @@
 <template>
-  <div class="custom-shadow bg-gray-900 col-span-2 p-3">
+  <div class="custom-shadow bg-gray-900 col-span-2 p-3"
+  :class="{'self-stretch' : strechComponent}">
     <div class="wrapper rounded-lg px-4 py-2 flex justify-between mb-4">
       <input
         type="text"
@@ -27,7 +28,7 @@
 
 <script lang="ts">
 import { computed, defineComponent, ref } from "vue";
-import { getMessages, sendMessage } from "../middleware/SocketConnection";
+import { getCurrGameDetails, getMessages, sendMessage } from "../middleware/SocketConnection";
 export default defineComponent({
   setup() {
     const messageText = ref("");
@@ -36,7 +37,7 @@ export default defineComponent({
       if (messageText.value.length) sendMessage(messageText.value);
       messageText.value = "";
     };
-
+    const strechComponent = computed(() => !getCurrGameDetails.value || !getCurrGameDetails.value.players.length )
     const isDisabled = computed(() => !messageText.value.length);
 
     return {
@@ -44,6 +45,7 @@ export default defineComponent({
       sendMessageToOthers,
       isDisabled,
       messageText,
+      strechComponent
     };
   },
 });

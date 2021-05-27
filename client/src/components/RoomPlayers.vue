@@ -1,5 +1,5 @@
 <template>
-  <div class="custom-shadow bg-gray-900 col-span-2" v-if="showComponent">
+  <div class="custom-shadow bg-gray-900 col-span-2 self-stretch">
     <div v-if="isInitiated" class="h-full">
       <div class="grid grid-cols-2 h-full px-4 py-3 gap-4">
         <div
@@ -39,9 +39,6 @@ export default defineComponent({
     };
   },
   computed: {
-    showComponent() {
-      return getCurrGameDetails.value.players.length
-    },
     addBlankRow() {
       return getCurrGameDetails.value.players.length < 3
     },
