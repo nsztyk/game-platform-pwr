@@ -1,5 +1,5 @@
 <template>
-  <div id="wrapper" class="grid grid-cols-4 w-full items-center py-3 px-4 text-center bg-gray-900 text-2xl" style="min-height: 100px" :class="borderTop">
+  <div id="wrapper" class="grid grid-cols-4 w-full items-center py-3 px-1 text-center bg-gray-900 text-xl lg:text-2xl" style="min-height: 100px" :class="borderTop">
     <div>
       {{ roomName }}
     </div>
@@ -7,7 +7,7 @@
       {{ roomGame }}
     </div>
     <div v-else>
-      --------------
+      -----------
     </div>
     <div>
       <img class="mx-auto" :src="imgSrc" alt="" />

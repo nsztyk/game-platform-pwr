@@ -24,6 +24,15 @@
     <div
       class="flex flex-col items-stretch justify-between custom-shadow mx-auto text-xl mt-12"
     >
+        <div class="grid grid-cols-4 w-full items-center py-3 px-2 text-center bg-gray-900 text-xl border-b-2 border-gray-600">
+          <div>Name</div>
+          <div>Game</div>
+          <div>Password</div>
+          <div>Players</div>
+        </div>
+        <div v-if="!getRooms.length" class="bg-gray-900 text-center py-3">
+          There aren't any rooms, create one!
+        </div>
         <template v-for="(room, index) in getRooms" :key="index">
           <router-link :to="{ name: 'Room', params: { id: room.id } }">
             <browse-rooms-room
