@@ -1,5 +1,8 @@
 <template>
-  <div class="flex flex-col lg:grid lg:grid-cols-5 gap-10 mx-auto w-11/12 sm:w-9/12 md:w-7/12 lg:w-9/12 xl:w-7/12 2xl:w-6/12 pt-20 items-stretch lg:items-start">
+  <modal-enter-password />
+  <div
+    class="flex flex-col lg:grid lg:grid-cols-5 gap-10 mx-auto w-11/12 sm:w-9/12 md:w-7/12 lg:w-9/12 xl:w-7/12 2xl:w-6/12 pt-20 items-stretch lg:items-start"
+  >
     <room-admin />
     <room-players v-if="showPlayersComponent" />
     <room-game v-if="getGameComponent" />
@@ -24,6 +27,8 @@ import RoomAdmin from "../components/RoomAdmin.vue";
 import RoomPlayers from "../components/RoomPlayers.vue";
 import RoomChat from "@/components/RoomChat.vue";
 import RoomGame from "@/components/RoomGame.vue";
+import ModalEnterPassword from "../components/ModalEnterPassword.vue";
+import { showEnterPasswordModal } from "../use/modalControl";
 
 export default defineComponent({
   name: "Room",
@@ -37,20 +42,23 @@ export default defineComponent({
     roomHasPassword() {
       return roomDetails.value ? roomDetails.value.hasPassword : undefined;
     },
-    showPlayersComponent(){
-      return getCurrGameDetails.value && getCurrGameDetails.value.players.length 
-    }
+    showPlayersComponent() {
+      return (
+        getCurrGameDetails.value && getCurrGameDetails.value.players.length
+      );
+    },
   },
-  setup(){
+  setup() {
     return {
       getGameComponent,
-    }
+    };
   },
   components: {
     RoomAdmin,
     RoomPlayers,
     RoomChat,
     RoomGame,
+    ModalEnterPassword,
   },
   beforeRouteLeave() {
     exitRoom();
@@ -69,8 +77,7 @@ export default defineComponent({
         if (!passwd) {
           joinRoom();
         } else {
-          const passwordGuess = prompt("Podaj hasło do pokoju");
-          joinRoom(passwordGuess);
+          showEnterPasswordModal();
         }
       }
     },

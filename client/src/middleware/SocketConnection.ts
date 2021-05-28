@@ -3,6 +3,7 @@ import { getUsername } from './TokenService'
 import io, { Socket } from 'socket.io-client'
 import { ref, computed } from 'vue';
 import { AvaliableGames, initGame } from "./GamesService"
+import { setPasswordWrong, showEnterPasswordModal } from '@/use/modalControl';
 
 interface RoomInterface {
   name: string;
@@ -48,9 +49,8 @@ const addOnEvents = () => {
   });
 
   socket.on("wrong-password-kick", () => {
-    // WrongPassword cant be boolean idk why
-    router.push({ name: "Game" })
-    alert("Wrong password ")
+    showEnterPasswordModal()
+    setPasswordWrong()
   })
 
   socket.on("chat-message", ({ message, nickname }) => {
