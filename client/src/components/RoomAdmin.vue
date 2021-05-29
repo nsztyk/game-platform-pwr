@@ -1,14 +1,17 @@
 <template>
   <div class="custom-shadow bg-gray-900 col-span-3 text-xl py-2">
-    <div v-if="isAdmin && !getCurrGameDetails.gameStarted">
+    <div v-if="isAdmin">
       <div class="flex items-center justify-center mb-3">
         <h3 class="mr-3 text-3xl">
           Admin
         </h3>
         <img src="../assets/Admin.png" alt="Admin icon" />
       </div>
-      <div class="grid grid-cols-3 gap-5 px-2 text-center items-center">
-        <div class="">
+      <div
+        class="grid grid-cols-3 gap-5 px-2 text-center items-center"
+        v-if="!gameStarted"
+      >
+        <div>
           Choose Game:
         </div>
         <div
@@ -21,20 +24,28 @@
           {{ game }}
         </div>
       </div>
+      <div v-if="gameStarted" class="text-center">
+        {{turnInfo}}
+      </div>
     </div>
-    <template v-else-if="!getCurrGameDetails.gameStarted">
+    <template v-else>
       <div class="flex items-center justify-center mb-3">
         <h3 class="mr-3 text-3xl">
           Player
         </h3>
         <img src="../assets/Player.png" alt="Player icon" />
       </div>
-      <div class="text-center" v-if="currGame">
-        <span class="mr-5">Current game:</span>
-        <span>{{ currGame }}</span>
+      <div v-if="!gameStarted">
+        <div class="text-center" v-if="currGame">
+          <span class="mr-5">Current game:</span>
+          <span>{{ currGame }}</span>
+        </div>
+        <div v-else class="text-center">
+          Game has not been selected by admin yet
+        </div>
       </div>
-      <div v-else class="text-center">
-        Game has not been selected by admin yet
+      <div v-if="gameStarted" class="text-center">
+        {{turnInfo}}
       </div>
     </template>
   </div>
@@ -46,6 +57,8 @@ import {
   getGames,
   chooseGame,
   canGameBeStarted,
+  gameStarted,
+  isMyTurn
 } from "../middleware/GamesService";
 import {
   getCurrGameDetails,
@@ -61,14 +74,18 @@ export default defineComponent({
       getGames,
       chooseGame,
       canGameBeStarted,
+      gameStarted
     };
   },
   computed: {
     currGame() {
-      if (roomDetails.value)
-        return roomDetails.value.game;
-      return false
+      if (roomDetails.value) return roomDetails.value.game;
+      return false;
     },
+    turnInfo() {
+      if (isMyTurn.value) return "Your turn, make a move!"
+      return "Wait for your turn!"
+    }
   },
 });
 </script>
