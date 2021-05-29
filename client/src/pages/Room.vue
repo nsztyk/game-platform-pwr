@@ -5,7 +5,7 @@
   >
     <room-admin />
     <room-players v-if="showPlayersComponent" />
-    <room-game v-if="getGameComponent" />
+    <room-game v-if="getGameComponent && isInitiated" />
     <room-chat />
   </div>
 </template>
@@ -22,7 +22,7 @@ import {
   setCurrentRoom,
   getCurrGameDetails,
 } from "../middleware/SocketConnection";
-import { exitGame, getGameComponent } from "../middleware/GamesService";
+import { exitGame, getGameComponent, isInitiated } from "../middleware/GamesService";
 import RoomAdmin from "../components/RoomAdmin.vue";
 import RoomPlayers from "../components/RoomPlayers.vue";
 import RoomChat from "@/components/RoomChat.vue";
@@ -51,6 +51,7 @@ export default defineComponent({
   setup() {
     return {
       getGameComponent,
+      isInitiated
     };
   },
   components: {
