@@ -329,7 +329,7 @@ io.on('connection', socket => {
   socket.on('end-game', ({ roomId }) => {
     const room = getRoomWithId(roomId)
     room.game = undefined
-    roomDetails[roomId] = { playersMoveOrder: [], gameState: [], result: {}, minPlayers: null, maxPlayers: null, gameStarted: false, players: [] }
+    roomDetails[roomId] = { playersMoveOrder: [], gameState: [], result: {}, minPlayers: null, maxPlayers: null, gameStarted: false, players: [], notInititated: true }
     delete gameSecret[roomId]
     io.to(roomId).emit('rooms', rooms)
     io.to(roomId).emit('curr-game-info', roomDetails[roomId])

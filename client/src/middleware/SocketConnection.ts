@@ -19,6 +19,7 @@ interface CurrGameDetails {
   gameState: string[];
   maxPlayers: number;
   minPlayers: number;
+  gameStarted: boolean;
   players: string[];
   result?: object;
   notInitiated?: boolean;
@@ -32,6 +33,7 @@ const currGameDetails = ref<CurrGameDetails>({
   gameState: [],
   minPlayers: NaN,
   maxPlayers: NaN,
+  gameStarted: false,
   notInitiated: true,
   players: []
 })
@@ -92,6 +94,7 @@ export const exitRoom = () => {
   currGameDetails.value = {
     playersMoveOrder: [],
     gameState: [],
+    gameStarted: false,
     minPlayers: NaN,
     maxPlayers: NaN,
     notInitiated: true,

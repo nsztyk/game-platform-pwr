@@ -1,5 +1,5 @@
 import { ref, computed } from 'vue';
-import { selectGameToPlay, makeMove, getCurrGameDetails } from "./SocketConnection"
+import { selectGameToPlay, makeMove, getCurrGameDetails, roomDetails } from "./SocketConnection"
 import { getUsername } from './TokenService'
 
 export enum AvaliableGames {
@@ -56,7 +56,9 @@ export const canGameBeStarted = computed(() => {
 export const getGames = computed(() => gamesToPlay.value)
 export const getGameComponent = computed(() => gameComponent.value)
 export const getGameState = computed(() => getCurrGameDetails.value.gameState)
-export const getResult = computed(() => getCurrGameDetails.value.result && Object.keys(getCurrGameDetails.value.result).length > 0)
-export const isInitiated = computed(() => !getCurrGameDetails.value.notInitiated)
+export const gameEnded = computed(() => getCurrGameDetails.value.result && Object.keys(getCurrGameDetails.value.result).length > 0)
+export const isInitiated = computed(() => !!roomDetails.value.game)
+export const gameStarted = computed(() => getCurrGameDetails.value.gameStarted)
+export const getResult = computed(() => getCurrGameDetails.value.result)
 
 
