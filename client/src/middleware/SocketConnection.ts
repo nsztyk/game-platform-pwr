@@ -83,7 +83,9 @@ const addOnEvents = () => {
 
 
 export const connectToServer = () => {
-  socket = io('http://localhost:5000')
+  // TO CHANGE
+  // socket = io('http://localhost:5000')
+  socket = io(process.env.VUE_APP_ROOT_API!)
   socket.emit('register-user-on-server', getUsername())
   addOnEvents()
 }

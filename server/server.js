@@ -70,9 +70,12 @@ const addGameResultToDb = (game, result) => {
   }
 }
 
+
+const allowedHost = ['http://localhost:8080', 'http://192.168.99.100']
+
 const io = require("socket.io")(server, {
   cors: {
-    origin: "http://localhost:8080",
+    origin: allowedHost,
   },
 });
 

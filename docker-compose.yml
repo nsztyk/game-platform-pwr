@@ -1,0 +1,16 @@
+version: '3.3'
+services: 
+  api:
+    container_name: game-center-pwr-server
+    restart: always
+    build: ./server
+    ports: 
+      - "5000:5000"
+  client:
+    container_name: game-center-pwr-client
+    restart: always
+    build: ./client
+    ports: 
+      - "80:80"
+    depends_on: 
+      - api

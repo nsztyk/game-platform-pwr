@@ -1,6 +1,7 @@
 import axios from 'axios';
 
-const url = 'api/users';
+// To change
+const url = process.env.VUE_APP_ROOT_API + "/api/users";
 
 interface User {
   username: string;
@@ -8,6 +9,7 @@ interface User {
 }
 
 export const loginUser = (user: User) => {
+  console.log(process.env);
   return axios.post(url + "/login", {
     user
   })
