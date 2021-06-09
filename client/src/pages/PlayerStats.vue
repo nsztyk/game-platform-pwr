@@ -9,7 +9,7 @@
     <div class="custom-shadow bg-gray-900 mx-auto p-4">
       <div
         id="wrapper"
-        class="grid grid-cols-3 justify-between mx-auto text-2xl rounded-lg py-3"
+        class="grid grid-cols-3 justify-between mx-auto text-2xl rounded-lg px-3 py-5"
         v-if="loaded"
       >
         <div class="ml-10 mb-6">Game</div>

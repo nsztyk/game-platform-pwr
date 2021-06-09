@@ -12,8 +12,8 @@
           {{ getPlayerInPosition(index) }}
         </div>
         <template v-if="addBlankRow">
-          <div v-for="elem in howManyElems" :key="elem" class="bg-gray-200 text-gray-900 rounded-md px-2 flex flex-col justify-center">
-              ---------------------
+          <div v-for="elem in howManyElems" :key="elem" class="bg-gray-400 text-gray-900 rounded-md px-2 flex flex-col justify-center text-center">
+              -----
           </div>
         </template>
       </div>
