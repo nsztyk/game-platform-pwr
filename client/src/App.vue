@@ -29,4 +29,7 @@ export default defineComponent({});
   box-shadow: 0px 0px 30px 0px rgba(0, 0, 0, 0.5);
 }
 
+.gray-bg {
+  background-color: #0B111E;
+}
 </style>
