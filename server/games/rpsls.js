@@ -73,7 +73,7 @@ const calculateResults = (result) => {
     const finalResult = players.map(player => {
       return {
         player: player.player,
-        result: player.points === highestScore ? 'Win' : 'Lost'
+        result: player.points === highestScore ? 'Win' : 'Lose'
       }
     })
     return finalResult;
