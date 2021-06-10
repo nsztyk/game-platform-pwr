@@ -70,6 +70,7 @@ export default defineComponent({
   setup() {
     const roomPassword = ref("");
     const handleEnterPassword = () => {
+      setPasswordCorrect()
       joinRoom(roomPassword.value);
       roomPassword.value = ""
       hideEnterPasswordModal();

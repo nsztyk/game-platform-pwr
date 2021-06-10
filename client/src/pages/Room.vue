@@ -28,7 +28,7 @@ import RoomPlayers from "../components/RoomPlayers.vue";
 import RoomChat from "@/components/RoomChat.vue";
 import RoomGame from "@/components/RoomGame.vue";
 import ModalEnterPassword from "../components/ModalEnterPassword.vue";
-import { showEnterPasswordModal } from "../use/modalControl";
+import { setPasswordCorrect, showEnterPasswordModal } from "../use/modalControl";
 
 export default defineComponent({
   name: "Room",
@@ -62,6 +62,7 @@ export default defineComponent({
     ModalEnterPassword,
   },
   beforeRouteLeave() {
+    setPasswordCorrect()
     exitRoom();
     exitGame();
   },
