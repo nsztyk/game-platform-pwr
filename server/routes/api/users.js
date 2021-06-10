@@ -19,6 +19,9 @@ router.post('/register', async (req, res) => {
   if (plainTextPassword !== repeatedPassword)
     return res.json({ status: 'error', error: 'Passwords do not match' })
 
+  if (plainTextPassword.length < 5)
+    return res.json({status: 'error', error: 'Password have to be at least 5 characters long'})
+    
   // TODO Regex for password and username
   const password = await bcrypt.hash(plainTextPassword, 10);
 
