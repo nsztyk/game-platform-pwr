@@ -9,7 +9,6 @@ interface User {
 }
 
 export const loginUser = (user: User) => {
-  console.log(process.env);
   return axios.post(url + "/login", {
     user
   })
