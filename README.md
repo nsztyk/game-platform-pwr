@@ -8,6 +8,7 @@ A web application that allows players to create rooms in which they can chat wit
 
 - [General info](#general-info)
 - [Technologies](#technologies)
+- [Instalation](#instalation)
 - [Features](#features)
 - [Status](#status)
 - [Inspiration](#inspiration)
@@ -41,6 +42,37 @@ The goal of the project is to meet this conditions:
 - WebSocket
 - MongoDB
 - JWT
+
+## Instalation
+  Navigate to folder and clone the repository
+  ```
+  git clone https://github.com/Enszyk/game-platform-pwr.git
+  ```
+  With docker:
+  ```
+  // Navigate to folder
+  cd game-center-pwr
+  
+  // build project
+  docker compose build
+  
+  // run project
+  docker compose up
+  ```
+  Without docker:
+  ```
+  // Install dependencies for client and run vue.js server
+  cd client/
+  npm install
+  npm run serve
+  
+  // Install dependencies for server and run it
+  cd ..
+  cd server/
+  npm install
+  npm run serve
+  ```
+  
 
 ## Features
 
