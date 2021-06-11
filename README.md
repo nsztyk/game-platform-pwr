@@ -19,7 +19,7 @@ A web application that allows players to create rooms in which they can chat wit
 The goal of the project is to meet this conditions:
 
 1) Have a data base
-2) Exhibit API in UI
+2) Exhibit API for UI
 3) Consume API
 4) Have a UI
 5) React in real-time on users inputs
